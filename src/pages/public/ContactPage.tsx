@@ -70,16 +70,6 @@ export function ContactPage() {
         </p>
 
         <p className="font-body text-shefel-yellow text-lg leading-relaxed">
-          או בכתובת מייל –{' '}
-          <a
-            href="mailto:shefel@kaduregelshefel.com"
-            className="underline hover:text-shefel-white transition-colors"
-          >
-            shefel@kaduregelshefel.com
-          </a>
-        </p>
-
-        <p className="font-body text-shefel-yellow text-lg leading-relaxed">
           להרשמה לניוזלטר ועדכונים טקסט{' '}
           <a
             href="https://docs.google.com/forms/d/e/1FAIpQLSdaVclAPwJ641OeXIO23DT3GZ9vALegcOyDy78FQR1gozkGiQ/viewform?usp=dialog"
