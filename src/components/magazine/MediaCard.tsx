@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { MediaItem } from '../../types/media';
 import type { Tag } from '../../types/tag';
 import { TagChip } from './TagChip';
+import { ShareButton } from './ShareButton';
 
 interface MediaCardProps {
   item: MediaItem;
@@ -48,9 +49,12 @@ export function MediaCard({ item, tagsMap }: MediaCardProps) {
           </>
         )}
       </div>
-      <p className="font-display font-bold text-shefel-black text-center mt-3 text-lg">
-        {item.title}
-      </p>
+      <div className="flex items-center justify-center gap-2 mt-3">
+        <ShareButton url={item.cloudinaryUrl} title={item.title} />
+        <p className="font-display font-bold text-shefel-black text-lg">
+          {item.title}
+        </p>
+      </div>
       {itemTags.length > 0 && (
         <div className="flex flex-wrap justify-center gap-2 mt-2">
           {itemTags.map((tag) => (

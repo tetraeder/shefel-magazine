@@ -17,22 +17,6 @@ export function Header() {
   return (
     <header className="bg-shefel-yellow border-b-4 border-shefel-red px-4 py-3">
       <div className="max-w-6xl mx-auto flex items-center justify-between relative">
-        {/* Desktop left nav */}
-        <nav className="hidden md:flex items-center gap-6">
-          <Link
-            to="/"
-            className="font-body font-bold text-shefel-red hover:text-shefel-black transition-colors no-underline"
-          >
-            מדיה
-          </Link>
-          <Link
-            to="/magazine"
-            className="font-body font-bold text-shefel-red hover:text-shefel-black transition-colors no-underline"
-          >
-            מגזין שפל
-          </Link>
-        </nav>
-
         {/* Mobile hamburger button */}
         <button
           onClick={() => setMenuOpen(!menuOpen)}
@@ -58,42 +42,36 @@ export function Header() {
           <img
             src="/Asset 1@4x-100.jpg"
             alt="כדורגל שפל"
-            className="h-14"
+            className="h-14 mix-blend-multiply"
           />
         </Link>
 
-        {/* Desktop right nav */}
-        <nav className="hidden md:flex items-center gap-6">
-          <Link
-            to="/90seconds"
-            className="font-body font-bold text-shefel-red hover:text-shefel-black transition-colors no-underline"
-          >
-            פסטיבל 90 שניות
-          </Link>
-          <Link
-            to="/about"
-            className="font-body font-bold text-shefel-red hover:text-shefel-black transition-colors no-underline"
-          >
-            עלינו
-          </Link>
-          <Link
-            to="/contact"
-            className="font-body font-bold text-shefel-red hover:text-shefel-black transition-colors no-underline"
-          >
-            דברו איתנו
-          </Link>
-          <Link to="/" className="border-r border-shefel-red pr-4 mr-2">
+        {/* Desktop: logo + all nav links + socials in one row */}
+        <nav className="hidden md:flex items-center gap-4 w-full flex-nowrap">
+          <Link to="/" className="shrink-0 ml-2">
             <img
               src="/Asset 1@4x-100.jpg"
               alt="כדורגל שפל"
-              className="h-14"
+              className="h-10 mix-blend-multiply"
             />
           </Link>
+          {navLinks.map((link) => (
+            <Link
+              key={link.to}
+              to={link.to}
+              className={`font-body font-bold text-base whitespace-nowrap hover:text-shefel-black transition-colors no-underline ${
+                location.pathname === link.to ? 'text-shefel-black' : 'text-shefel-red'
+              }`}
+            >
+              {link.label}
+            </Link>
+          ))}
+          <div className="flex-1" />
           <SocialLinks
             showLabels
             labelType="desktop"
             className="flex items-center gap-3"
-            linkClassName="flex items-center gap-1 text-shefel-red hover:text-shefel-black transition-colors no-underline font-body text-sm font-bold"
+            linkClassName="flex items-center gap-1 text-shefel-red hover:text-shefel-black transition-colors no-underline font-body text-sm font-bold whitespace-nowrap"
             iconClassName="w-4 h-4"
           />
         </nav>

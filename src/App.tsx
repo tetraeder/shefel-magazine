@@ -18,6 +18,7 @@ import { TagsPage } from './pages/admin/TagsPage';
 import { IssuesPage } from './pages/admin/IssuesPage';
 import { MediaPage } from './pages/public/MediaPage';
 import { MediaAdminPage } from './pages/admin/MediaAdminPage';
+import { SeedPage } from './pages/admin/SeedPage';
 
 const router = createBrowserRouter([
   {
@@ -49,6 +50,7 @@ const router = createBrowserRouter([
           { path: 'tags', element: <TagsPage /> },
           { path: 'issues', element: <IssuesPage /> },
           { path: 'media', element: <MediaAdminPage /> },
+          { path: 'seed', element: <SeedPage /> },
         ],
       },
     ],

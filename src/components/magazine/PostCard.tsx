@@ -3,6 +3,7 @@ import type { Post } from '../../types/post';
 import type { Tag } from '../../types/tag';
 import { TagChip } from './TagChip';
 import { InstagramEmbed } from './InstagramEmbed';
+import { ShareButton } from './ShareButton';
 
 interface PostCardProps {
   post: Post;
@@ -55,45 +56,42 @@ export function PostCard({ post, tagsMap }: PostCardProps) {
             loading="lazy"
           />
         </div>
-        {postTags.length > 0 && (
-          <div className="p-3 flex flex-wrap gap-2 shrink-0">
-            {postTags.map((tag) => (
-              <TagChip key={tag.id} tag={tag} />
-            ))}
-          </div>
-        )}
+        <div className="p-3 flex flex-wrap items-center gap-2 shrink-0">
+          <ShareButton url={post.instagramUrl || post.imageUrl} title={post.caption} />
+          {postTags.map((tag) => (
+            <TagChip key={tag.id} tag={tag} />
+          ))}
+        </div>
       </article>
     );
   }
 
   return (
     <div className="relative">
-      {/* Real card — always in the DOM so Instagram can process it */}
-      <article
-        className={`rounded-lg overflow-hidden flex flex-col transition-opacity duration-300 ${
+      {/* Skeleton — normal flow, provides height */}
+      {!embedLoaded && <PostCardSkeleton />}
+
+      {/* Embed container — clipped invisible while loading, normal card when loaded */}
+      <div
+        className={
           embedLoaded
-            ? 'bg-shefel-yellow border-4 border-shefel-red shadow-lg opacity-100'
-            : 'opacity-0'
-        }`}
+            ? 'bg-shefel-yellow rounded-lg overflow-hidden border-4 border-shefel-red shadow-lg flex flex-col'
+            : 'absolute top-0 left-0 w-full'
+        }
+        style={embedLoaded ? undefined : { clipPath: 'inset(100%)', overflow: 'hidden' }}
       >
         <div className="min-h-0">
           <InstagramEmbed url={post.instagramUrl!} onLoaded={onLoaded} />
         </div>
-        {embedLoaded && postTags.length > 0 && (
-          <div className="p-3 flex flex-wrap gap-2 shrink-0">
+        {embedLoaded && (
+          <div className="p-3 flex flex-wrap items-center gap-2 shrink-0">
+            <ShareButton url={post.instagramUrl!} title={post.caption} />
             {postTags.map((tag) => (
               <TagChip key={tag.id} tag={tag} />
             ))}
           </div>
         )}
-      </article>
-
-      {/* Skeleton overlay — covers everything until embed loads */}
-      {!embedLoaded && (
-        <div className="absolute inset-0 z-10">
-          <PostCardSkeleton />
-        </div>
-      )}
+      </div>
     </div>
   );
 }
