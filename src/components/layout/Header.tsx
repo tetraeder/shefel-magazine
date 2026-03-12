@@ -37,25 +37,24 @@ export function Header() {
           />
         </button>
 
-        {/* Mobile center logo — temporarily hidden until new logo is ready */}
-        {/* <Link to="/" className="md:hidden absolute left-1/2 -translate-x-1/2">
+        {/* Mobile center logo */}
+        <Link to="/" className="md:hidden absolute left-1/2 -translate-x-1/2">
           <img
-            src="/Asset 1@4x-100.jpg"
+            src="/logo-shefel.jpg"
             alt="כדורגל שפל"
-            className="h-14 mix-blend-multiply"
+            className="h-14 rounded-lg mix-blend-multiply"
           />
-        </Link> */}
+        </Link>
 
         {/* Desktop: logo + all nav links + socials in one row */}
         <nav className="hidden md:flex items-center gap-4 w-full flex-nowrap">
-          {/* Logo temporarily hidden until new logo is ready */}
-          {/* <Link to="/" className="shrink-0 ml-2">
+          <Link to="/" className="shrink-0 ml-2">
             <img
-              src="/Asset 1@4x-100.jpg"
+              src="/logo-shefel.jpg"
               alt="כדורגל שפל"
-              className="h-10 mix-blend-multiply"
+              className="h-10 rounded-lg mix-blend-multiply"
             />
-          </Link> */}
+          </Link>
           {navLinks.map((link) => (
             <Link
               key={link.to}
