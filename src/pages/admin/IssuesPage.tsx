@@ -50,6 +50,9 @@ export function IssuesPage() {
       }
       setShowForm(false);
       refetch();
+    } catch (err) {
+      console.error('Failed to save issue:', err);
+      alert('שגיאה בשמירה: ' + (err instanceof Error ? err.message : String(err)));
     } finally {
       setSaving(false);
     }

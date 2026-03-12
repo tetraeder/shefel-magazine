@@ -18,9 +18,9 @@ import type { Issue, IssueFormData } from '../types/issue';
 const COLLECTION = 'issues';
 
 export async function getAllIssues(): Promise<Issue[]> {
-  const q = query(collection(getAppDb(), COLLECTION), orderBy('year', 'desc'), orderBy('month', 'desc'));
-  const snapshot = await getDocs(q);
-  return snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Issue));
+  const snapshot = await getDocs(collection(getAppDb(), COLLECTION));
+  const issues = snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Issue));
+  return issues.sort((a, b) => b.year - a.year || b.month - a.month);
 }
 
 export async function getCurrentIssue(): Promise<Issue | null> {
