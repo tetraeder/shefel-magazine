@@ -104,7 +104,7 @@ export function PostGrid({ items, posts, tagsMap }: PostGridProps) {
             <div
               key={key}
               ref={(el) => { cardRefs.current[index] = el; }}
-              className="snap-center shrink-0 w-[70vw] sm:w-[55vw] md:w-[40vw] lg:w-[30vw] max-w-[400px]"
+              className="snap-center shrink-0 w-[92vw] sm:w-[70vw] md:w-[50vw] lg:w-[35vw] max-w-[480px]"
               style={{
                 transform: isActive ? 'scale(1)' : 'scale(0.85)',
                 opacity: isActive ? 1 : 0.5,
