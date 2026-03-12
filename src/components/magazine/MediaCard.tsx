@@ -7,10 +7,11 @@ import { ShareButton } from './ShareButton';
 interface MediaCardProps {
   item: MediaItem;
   tagsMap: Record<string, Tag>;
+  autoPlay?: boolean;
 }
 
-export function MediaCard({ item, tagsMap }: MediaCardProps) {
-  const [playing, setPlaying] = useState(false);
+export function MediaCard({ item, tagsMap, autoPlay = false }: MediaCardProps) {
+  const [playing, setPlaying] = useState(autoPlay);
 
   const itemTags = item.tags
     .map((id) => tagsMap[id])

@@ -111,8 +111,8 @@ export function MediaPage() {
       ) : (
         <div key={`${activeTag}-${sort}`} className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 grid-animate">
           {sorted.map((item) => (
-            <div key={item.id} id={`media-${item.id}`} className={highlightId === item.id ? 'ring-4 ring-shefel-red rounded-lg' : ''}>
-              <MediaCard item={item} tagsMap={tagsMap} />
+            <div key={item.id} id={`media-${item.id}`} className={highlightId === item.id ? 'pb-2 pr-2' : ''}>
+              <MediaCard item={item} tagsMap={tagsMap} autoPlay={highlightId === item.id} />
             </div>
           ))}
         </div>
