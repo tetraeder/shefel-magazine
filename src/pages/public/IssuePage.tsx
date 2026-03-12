@@ -53,7 +53,7 @@ export function IssuePage() {
 
   return (
     <>
-      <IssueHeader month={issue.month} year={issue.year} title={issue.title} />
+      <IssueHeader month={issue.month} year={issue.year} title={issue.title} description={issue.description} />
       <PostGrid posts={posts} tagsMap={tagsMap} />
     </>
   );

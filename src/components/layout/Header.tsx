@@ -3,7 +3,8 @@ import { Link, useLocation } from 'react-router-dom';
 import { SocialLinks } from './SocialLinks';
 
 const navLinks = [
-  { to: '/', label: 'מגזין שפל' },
+  { to: '/', label: 'מדיה' },
+  { to: '/magazine', label: 'מגזין שפל' },
   { to: '/90seconds', label: 'פסטיבל 90 שניות' },
   { to: '/about', label: 'עלינו' },
   { to: '/contact', label: 'דברו איתנו' },
@@ -20,6 +21,12 @@ export function Header() {
         <nav className="hidden md:flex items-center gap-6">
           <Link
             to="/"
+            className="font-body font-bold text-shefel-red hover:text-shefel-black transition-colors no-underline"
+          >
+            מדיה
+          </Link>
+          <Link
+            to="/magazine"
             className="font-body font-bold text-shefel-red hover:text-shefel-black transition-colors no-underline"
           >
             מגזין שפל
@@ -46,8 +53,8 @@ export function Header() {
           />
         </button>
 
-        {/* Center logo */}
-        <Link to="/" className="absolute left-1/2 -translate-x-1/2">
+        {/* Mobile center logo */}
+        <Link to="/" className="md:hidden absolute left-1/2 -translate-x-1/2">
           <img
             src="/Asset 1@4x-100.jpg"
             alt="כדורגל שפל"
@@ -75,10 +82,17 @@ export function Header() {
           >
             דברו איתנו
           </Link>
+          <Link to="/" className="border-r border-shefel-red pr-4 mr-2">
+            <img
+              src="/Asset 1@4x-100.jpg"
+              alt="כדורגל שפל"
+              className="h-14"
+            />
+          </Link>
           <SocialLinks
             showLabels
             labelType="desktop"
-            className="flex items-center gap-3 mr-2 border-r border-shefel-red pr-4"
+            className="flex items-center gap-3"
             linkClassName="flex items-center gap-1 text-shefel-red hover:text-shefel-black transition-colors no-underline font-body text-sm font-bold"
             iconClassName="w-4 h-4"
           />

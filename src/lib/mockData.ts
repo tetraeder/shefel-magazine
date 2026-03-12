@@ -2,8 +2,10 @@ import { Timestamp } from 'firebase/firestore';
 import type { Post } from '../types/post';
 import type { Tag } from '../types/tag';
 import type { Issue } from '../types/issue';
+import type { MediaItem } from '../types/media';
 
 const now = Timestamp.now();
+const daysAgo = (d: number) => Timestamp.fromMillis(Date.now() - d * 86400000);
 
 export const MOCK_TAGS: Tag[] = [
   { id: 'tag-1', name: 'ליגת העל', slug: 'ligat-haal', color: null, postCount: 2, createdAt: now },
@@ -18,6 +20,7 @@ export const MOCK_ISSUES: Issue[] = [
     month: 3,
     year: 2026,
     title: 'גיליון מרץ 2026',
+    description: 'כל מה שקורה במגרשים, בגובה העיניים',
     isCurrent: true,
     postCount: 3,
     publishedAt: now,
@@ -29,6 +32,7 @@ export const MOCK_ISSUES: Issue[] = [
     month: 2,
     year: 2026,
     title: 'גיליון פברואר 2026',
+    description: '',
     isCurrent: false,
     postCount: 0,
     publishedAt: now,
@@ -49,6 +53,7 @@ export const MOCK_POSTS: Post[] = [
     issueId: 'issue-march-2026',
     order: 1,
     source: 'manual',
+    publishedAt: daysAgo(2),
     createdAt: now,
     updatedAt: now,
   },
@@ -63,6 +68,7 @@ export const MOCK_POSTS: Post[] = [
     issueId: 'issue-march-2026',
     order: 2,
     source: 'manual',
+    publishedAt: daysAgo(5),
     createdAt: now,
     updatedAt: now,
   },
@@ -77,6 +83,32 @@ export const MOCK_POSTS: Post[] = [
     issueId: 'issue-march-2026',
     order: 3,
     source: 'manual',
+    publishedAt: daysAgo(10),
+    createdAt: now,
+    updatedAt: now,
+  },
+];
+
+export const MOCK_MEDIA: MediaItem[] = [
+  {
+    id: 'media-1',
+    title: 'ערן לוי — אגדת כדורגל',
+    cloudinaryUrl: 'https://res.cloudinary.com/dsheksfdb/video/upload/v1771839186/%D7%A2%D7%A8%D7%9F_%D7%9C%D7%95%D7%99_%D7%90%D7%92%D7%93%D7%AA_%D7%9B%D7%93%D7%95%D7%A8%D7%92%D7%9C_1_lt2fqn.mp4',
+    thumbnailUrl: 'https://res.cloudinary.com/dsheksfdb/video/upload/so_0/v1771839186/%D7%A2%D7%A8%D7%9F_%D7%9C%D7%95%D7%99_%D7%90%D7%92%D7%93%D7%AA_%D7%9B%D7%93%D7%95%D7%A8%D7%92%D7%9C_1_lt2fqn.jpg',
+    tags: ['tag-1', 'tag-4'],
+    order: 1,
+    publishedAt: daysAgo(1),
+    createdAt: now,
+    updatedAt: now,
+  },
+  {
+    id: 'media-2',
+    title: 'כפס 1928 — עירוני אשדוד',
+    cloudinaryUrl: 'https://res.cloudinary.com/dsheksfdb/video/upload/v1771839212/%D7%9B%D7%A4%D7%A1_1928_%D7%A2%D7%99%D7%A8%D7%95%D7%A0%D7%99_%D7%90%D7%A9%D7%93%D7%95%D7%93_mgyu88.mp4',
+    thumbnailUrl: 'https://res.cloudinary.com/dsheksfdb/video/upload/so_0/v1771839212/%D7%9B%D7%A4%D7%A1_1928_%D7%A2%D7%99%D7%A8%D7%95%D7%A0%D7%99_%D7%90%D7%A9%D7%93%D7%95%D7%93_mgyu88.jpg',
+    tags: ['tag-4'],
+    order: 2,
+    publishedAt: daysAgo(7),
     createdAt: now,
     updatedAt: now,
   },

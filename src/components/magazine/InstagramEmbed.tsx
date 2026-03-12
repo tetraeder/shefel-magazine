@@ -19,23 +19,36 @@ function ensureEmbedScript() {
 
 interface InstagramEmbedProps {
   url: string;
+  onLoaded?: () => void;
 }
 
-export function InstagramEmbed({ url }: InstagramEmbedProps) {
+export function InstagramEmbed({ url, onLoaded }: InstagramEmbedProps) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     ensureEmbedScript();
 
-    // Give the script time to load, then process embeds
     const timer = setTimeout(() => {
       window.instgrm?.Embeds.process();
     }, 500);
 
-    return () => clearTimeout(timer);
-  }, [url]);
+    const container = ref.current;
+    if (!container) return () => clearTimeout(timer);
 
-  // Extract the clean URL (remove query params)
+    const observer = new MutationObserver(() => {
+      if (container.querySelector('iframe')) {
+        onLoaded?.();
+        observer.disconnect();
+      }
+    });
+    observer.observe(container, { childList: true, subtree: true });
+
+    return () => {
+      clearTimeout(timer);
+      observer.disconnect();
+    };
+  }, [url, onLoaded]);
+
   const cleanUrl = url.replace(/\?.*$/, '');
 
   return (

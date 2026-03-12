@@ -7,6 +7,7 @@ const navItems = [
   { to: '/admin/posts', label: 'פוסטים', end: false },
   { to: '/admin/tags', label: 'תגיות', end: false },
   { to: '/admin/issues', label: 'גיליונות', end: false },
+  { to: '/admin/media', label: 'מדיה', end: false },
 ];
 
 export function AdminLayout() {

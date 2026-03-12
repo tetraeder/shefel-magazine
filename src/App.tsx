@@ -16,12 +16,15 @@ import { DashboardPage } from './pages/admin/DashboardPage';
 import { PostsPage } from './pages/admin/PostsPage';
 import { TagsPage } from './pages/admin/TagsPage';
 import { IssuesPage } from './pages/admin/IssuesPage';
+import { MediaPage } from './pages/public/MediaPage';
+import { MediaAdminPage } from './pages/admin/MediaAdminPage';
 
 const router = createBrowserRouter([
   {
     element: <Shell />,
     children: [
-      { path: '/', element: <HomePage /> },
+      { path: '/', element: <MediaPage /> },
+      { path: '/magazine', element: <HomePage /> },
       { path: '/issue/:year/:month', element: <IssuePage /> },
       { path: '/tag/:slug', element: <TagPage /> },
       { path: '/archive', element: <ArchivePage /> },
@@ -45,6 +48,7 @@ const router = createBrowserRouter([
           { path: 'posts', element: <PostsPage /> },
           { path: 'tags', element: <TagsPage /> },
           { path: 'issues', element: <IssuesPage /> },
+          { path: 'media', element: <MediaAdminPage /> },
         ],
       },
     ],

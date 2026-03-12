@@ -7,7 +7,7 @@ const links = [
   },
   {
     href: 'https://www.instagram.com/shefelshop/',
-    label: 'שפל שופ',
+    label: 'שופ',
     desktopLabel: 'שופ',
     icon: 'instagram',
   },

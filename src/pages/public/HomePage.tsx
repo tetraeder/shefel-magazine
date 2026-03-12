@@ -2,8 +2,10 @@ import { useCurrentIssue } from '../../hooks/useCurrentIssue';
 import { usePostsByIssue } from '../../hooks/usePosts';
 import { useTags } from '../../hooks/useTags';
 import { useIssues } from '../../hooks/useIssues';
+import { useMedia } from '../../hooks/useMedia';
 import { IssueHeader } from '../../components/magazine/IssueHeader';
 import { PostGrid } from '../../components/magazine/PostGrid';
+import type { CarouselItem } from '../../components/magazine/PostGrid';
 import { ArchiveList } from '../../components/magazine/ArchiveList';
 import { Spinner } from '../../components/ui/Spinner';
 import { useMemo } from 'react';
@@ -14,6 +16,7 @@ export function HomePage() {
   const { posts, loading: postsLoading } = usePostsByIssue(issue?.id);
   const { tags } = useTags();
   const { issues } = useIssues();
+  const { media, loading: mediaLoading } = useMedia();
 
   const tagsMap = useMemo(() => {
     const map: Record<string, Tag> = {};
@@ -26,7 +29,17 @@ export function HomePage() {
     [issues, issue]
   );
 
-  if (issueLoading || postsLoading) return <Spinner />;
+  const carouselItems: CarouselItem[] = useMemo(() => {
+    const postItems: CarouselItem[] = posts.map((p) => ({ type: 'post', data: p }));
+    // Insert first media item after the posts
+    const firstMedia = media[0];
+    if (firstMedia) {
+      postItems.push({ type: 'media', data: firstMedia });
+    }
+    return postItems;
+  }, [posts, media]);
+
+  if (issueLoading || postsLoading || mediaLoading) return <Spinner />;
 
   if (!issue) {
     return (
@@ -43,8 +56,8 @@ export function HomePage() {
 
   return (
     <>
-      <IssueHeader month={issue.month} year={issue.year} title={issue.title} showArchiveLink={pastIssues.length > 0} />
-      <PostGrid posts={posts} tagsMap={tagsMap} />
+      <IssueHeader month={issue.month} year={issue.year} title={issue.title} description={issue.description} showArchiveLink={pastIssues.length > 0} />
+      <PostGrid items={carouselItems} tagsMap={tagsMap} />
 
       {pastIssues.length > 0 && (
         <section id="archive" className="mt-16">

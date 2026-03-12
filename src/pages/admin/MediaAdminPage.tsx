@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { useAllPosts } from '../../hooks/usePosts';
+import { useMedia } from '../../hooks/useMedia';
 import { useTags } from '../../hooks/useTags';
-import { useIssues } from '../../hooks/useIssues';
-import { createPost, updatePost, deletePost } from '../../services/posts';
-import type { Post, PostFormData } from '../../types/post';
+import { createMedia, updateMedia, deleteMedia } from '../../services/media';
+import type { MediaItem, MediaFormData } from '../../types/media';
 import { Spinner } from '../../components/ui/Spinner';
 
 function tsToDateStr(ts: { toDate: () => Date } | null): string {
@@ -11,26 +10,21 @@ function tsToDateStr(ts: { toDate: () => Date } | null): string {
   return ts.toDate().toISOString().split('T')[0];
 }
 
-const emptyForm: PostFormData = {
-  imageUrl: '',
-  caption: '',
-  captionSnippet: '',
-  author: '',
-  instagramUrl: null,
+const emptyForm: MediaFormData = {
+  title: '',
+  cloudinaryUrl: '',
+  thumbnailUrl: '',
   tags: [],
-  issueId: '',
   order: 0,
-  source: 'manual',
   publishedAt: '',
 };
 
-export function PostsPage() {
-  const { posts, loading, refetch } = useAllPosts();
+export function MediaAdminPage() {
+  const { media, loading, refetch } = useMedia();
   const { tags } = useTags();
-  const { issues } = useIssues();
-  const [editing, setEditing] = useState<Post | null>(null);
+  const [editing, setEditing] = useState<MediaItem | null>(null);
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState<PostFormData>(emptyForm);
+  const [form, setForm] = useState<MediaFormData>(emptyForm);
   const [saving, setSaving] = useState(false);
 
   function openNew() {
@@ -39,19 +33,15 @@ export function PostsPage() {
     setShowForm(true);
   }
 
-  function openEdit(post: Post) {
-    setEditing(post);
+  function openEdit(item: MediaItem) {
+    setEditing(item);
     setForm({
-      imageUrl: post.imageUrl,
-      caption: post.caption,
-      captionSnippet: post.captionSnippet,
-      author: post.author,
-      instagramUrl: post.instagramUrl,
-      tags: post.tags,
-      issueId: post.issueId,
-      order: post.order,
-      source: post.source,
-      publishedAt: tsToDateStr(post.publishedAt),
+      title: item.title,
+      cloudinaryUrl: item.cloudinaryUrl,
+      thumbnailUrl: item.thumbnailUrl,
+      tags: item.tags,
+      order: item.order,
+      publishedAt: tsToDateStr(item.publishedAt),
     });
     setShowForm(true);
   }
@@ -60,9 +50,9 @@ export function PostsPage() {
     setSaving(true);
     try {
       if (editing) {
-        await updatePost(editing.id, form);
+        await updateMedia(editing.id, form);
       } else {
-        await createPost(form);
+        await createMedia(form);
       }
       setShowForm(false);
       refetch();
@@ -72,8 +62,8 @@ export function PostsPage() {
   }
 
   async function handleDelete(id: string) {
-    if (!confirm('למחוק את הפוסט?')) return;
-    await deletePost(id);
+    if (!confirm('למחוק את פריט המדיה?')) return;
+    await deleteMedia(id);
     refetch();
   }
 
@@ -92,83 +82,51 @@ export function PostsPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <h1 className="font-display font-black text-shefel-black text-3xl">
-          פוסטים
+          מדיה
         </h1>
         <button
           onClick={openNew}
           className="bg-shefel-red text-shefel-white font-bold px-4 py-2 rounded hover:bg-shefel-black transition-colors"
         >
-          + פוסט חדש
+          + מדיה חדשה
         </button>
       </div>
 
       {showForm && (
         <div className="bg-shefel-white rounded-lg border-2 border-shefel-red p-6 mb-6">
           <h2 className="font-display font-bold text-xl mb-4">
-            {editing ? 'עריכת פוסט' : 'פוסט חדש'}
+            {editing ? 'עריכת מדיה' : 'מדיה חדשה'}
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block font-body font-bold text-sm mb-1">קישור תמונה</label>
-              <input
-                type="url"
-                value={form.imageUrl}
-                onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
-                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-sm"
-                dir="ltr"
-              />
-            </div>
-            <div>
-              <label className="block font-body font-bold text-sm mb-1">מחבר</label>
-              <input
-                value={form.author}
-                onChange={(e) => setForm({ ...form, author: e.target.value })}
-                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-sm"
-              />
-            </div>
             <div className="md:col-span-2">
-              <label className="block font-body font-bold text-sm mb-1">כיתוב</label>
-              <textarea
-                value={form.caption}
-                onChange={(e) => setForm({ ...form, caption: e.target.value })}
-                rows={3}
-                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-sm"
-              />
-            </div>
-            <div>
-              <label className="block font-body font-bold text-sm mb-1">כיתוב מקוצר</label>
+              <label className="block font-body font-bold text-sm mb-1">כותרת</label>
               <input
-                value={form.captionSnippet}
-                onChange={(e) => setForm({ ...form, captionSnippet: e.target.value })}
+                value={form.title}
+                onChange={(e) => setForm({ ...form, title: e.target.value })}
                 className="w-full border-2 border-gray-300 rounded px-3 py-2 text-sm"
               />
             </div>
             <div>
-              <label className="block font-body font-bold text-sm mb-1">קישור אינסטגרם</label>
+              <label className="block font-body font-bold text-sm mb-1">קישור וידאו (Cloudinary)</label>
               <input
                 type="url"
-                value={form.instagramUrl || ''}
-                onChange={(e) => setForm({ ...form, instagramUrl: e.target.value || null })}
+                value={form.cloudinaryUrl}
+                onChange={(e) => setForm({ ...form, cloudinaryUrl: e.target.value })}
+                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-sm"
+                dir="ltr"
+                placeholder="https://res.cloudinary.com/..."
+              />
+            </div>
+            <div>
+              <label className="block font-body font-bold text-sm mb-1">קישור תמונת תצוגה</label>
+              <input
+                type="url"
+                value={form.thumbnailUrl}
+                onChange={(e) => setForm({ ...form, thumbnailUrl: e.target.value })}
                 className="w-full border-2 border-gray-300 rounded px-3 py-2 text-sm"
                 dir="ltr"
               />
-            </div>
-            <div>
-              <label className="block font-body font-bold text-sm mb-1">גיליון</label>
-              <select
-                value={form.issueId}
-                onChange={(e) => setForm({ ...form, issueId: e.target.value })}
-                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-sm"
-              >
-                <option value="">בחר גיליון</option>
-                {issues.map((issue) => (
-                  <option key={issue.id} value={issue.id}>
-                    {issue.title || `${issue.month}/${issue.year}`}
-                    {issue.isCurrent ? ' (נוכחי)' : ''}
-                  </option>
-                ))}
-              </select>
             </div>
             <div>
               <label className="block font-body font-bold text-sm mb-1">סדר</label>
@@ -210,10 +168,10 @@ export function PostsPage() {
             </div>
           </div>
 
-          {form.imageUrl && (
+          {form.thumbnailUrl && (
             <div className="mt-4">
               <p className="font-body font-bold text-sm mb-1">תצוגה מקדימה</p>
-              <img src={form.imageUrl} alt="preview" className="w-32 h-32 object-cover rounded border-2 border-gray-300" />
+              <img src={form.thumbnailUrl} alt="preview" className="w-32 h-auto rounded border-2 border-gray-300" />
             </div>
           )}
 
@@ -240,34 +198,34 @@ export function PostsPage() {
           <thead className="bg-shefel-black text-shefel-white">
             <tr>
               <th className="px-4 py-3 text-right font-bold">תמונה</th>
-              <th className="px-4 py-3 text-right font-bold">מחבר</th>
-              <th className="px-4 py-3 text-right font-bold">כיתוב</th>
+              <th className="px-4 py-3 text-right font-bold">כותרת</th>
+              <th className="px-4 py-3 text-right font-bold">סדר</th>
               <th className="px-4 py-3 text-right font-bold">פורסם</th>
               <th className="px-4 py-3 text-right font-bold">תגיות</th>
               <th className="px-4 py-3 text-right font-bold">פעולות</th>
             </tr>
           </thead>
           <tbody>
-            {posts.map((post) => (
-              <tr key={post.id} className="border-b border-gray-200 hover:bg-gray-50">
+            {media.map((item) => (
+              <tr key={item.id} className="border-b border-gray-200 hover:bg-gray-50">
                 <td className="px-4 py-3">
-                  {post.imageUrl && (
-                    <img src={post.imageUrl} alt="" className="w-12 h-12 object-cover rounded" />
+                  {item.thumbnailUrl && (
+                    <img src={item.thumbnailUrl} alt="" className="w-12 h-16 object-cover rounded" />
                   )}
                 </td>
-                <td className="px-4 py-3">{post.author}</td>
-                <td className="px-4 py-3 max-w-xs truncate">{post.captionSnippet || post.caption}</td>
-                <td className="px-4 py-3 text-xs" dir="ltr">{tsToDateStr(post.publishedAt)|| '—'}</td>
-                <td className="px-4 py-3">{post.tags.length} תגיות</td>
+                <td className="px-4 py-3 font-bold">{item.title}</td>
+                <td className="px-4 py-3">{item.order}</td>
+                <td className="px-4 py-3 text-xs" dir="ltr">{tsToDateStr(item.publishedAt) || '—'}</td>
+                <td className="px-4 py-3">{item.tags.length} תגיות</td>
                 <td className="px-4 py-3">
                   <button
-                    onClick={() => openEdit(post)}
+                    onClick={() => openEdit(item)}
                     className="text-shefel-red hover:underline font-bold ml-3"
                   >
                     ערוך
                   </button>
                   <button
-                    onClick={() => handleDelete(post.id)}
+                    onClick={() => handleDelete(item.id)}
                     className="text-gray-500 hover:text-shefel-red font-bold"
                   >
                     מחק
@@ -275,10 +233,10 @@ export function PostsPage() {
                 </td>
               </tr>
             ))}
-            {posts.length === 0 && (
+            {media.length === 0 && (
               <tr>
                 <td colSpan={6} className="px-4 py-8 text-center text-gray-500">
-                  אין פוסטים עדיין
+                  אין פריטי מדיה עדיין
                 </td>
               </tr>
             )}

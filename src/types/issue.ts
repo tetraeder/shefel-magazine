@@ -5,6 +5,7 @@ export interface Issue {
   month: number;
   year: number;
   title: string;
+  description: string;
   isCurrent: boolean;
   postCount: number;
   publishedAt: Timestamp | null;

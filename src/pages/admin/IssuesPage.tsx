@@ -9,6 +9,7 @@ const emptyForm: IssueFormData = {
   month: new Date().getMonth() + 1,
   year: new Date().getFullYear(),
   title: '',
+  description: '',
   isCurrent: false,
   publishedAt: null,
 };
@@ -32,6 +33,7 @@ export function IssuesPage() {
       month: issue.month,
       year: issue.year,
       title: issue.title,
+      description: issue.description || '',
       isCurrent: issue.isCurrent,
       publishedAt: issue.publishedAt,
     });
@@ -118,6 +120,16 @@ export function IssuesPage() {
                 className="w-full border-2 border-gray-300 rounded px-3 py-2 text-sm"
               />
             </div>
+            <div className="md:col-span-3">
+              <label className="block font-body font-bold text-sm mb-1">תיאור הגיליון</label>
+              <textarea
+                value={form.description}
+                onChange={(e) => setForm({ ...form, description: e.target.value })}
+                rows={3}
+                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-sm"
+                placeholder="תיאור קצר של הגיליון — מופיע מתחת לכותרת בעמוד הראשי"
+              />
+            </div>
           </div>
 
           <div className="flex gap-3 mt-6">
@@ -144,6 +156,7 @@ export function IssuesPage() {
             <tr>
               <th className="px-4 py-3 text-right font-bold">תאריך</th>
               <th className="px-4 py-3 text-right font-bold">כותרת</th>
+              <th className="px-4 py-3 text-right font-bold">תיאור</th>
               <th className="px-4 py-3 text-right font-bold">פוסטים</th>
               <th className="px-4 py-3 text-right font-bold">סטטוס</th>
               <th className="px-4 py-3 text-right font-bold">פעולות</th>
@@ -156,6 +169,7 @@ export function IssuesPage() {
                   {formatIssueDate(issue.month, issue.year)}
                 </td>
                 <td className="px-4 py-3">{issue.title || '-'}</td>
+                <td className="px-4 py-3 max-w-xs truncate">{issue.description || '-'}</td>
                 <td className="px-4 py-3">{issue.postCount}</td>
                 <td className="px-4 py-3">
                   {issue.isCurrent ? (
@@ -183,7 +197,7 @@ export function IssuesPage() {
             ))}
             {issues.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-gray-500">
+                <td colSpan={6} className="px-4 py-8 text-center text-gray-500">
                   אין גיליונות עדיין
                 </td>
               </tr>

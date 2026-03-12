@@ -11,8 +11,11 @@ export interface Post {
   issueId: string;
   order: number;
   source: 'manual' | 'oembed';
+  publishedAt: Timestamp | null;
   createdAt: Timestamp;
   updatedAt: Timestamp;
 }
 
-export type PostFormData = Omit<Post, 'id' | 'createdAt' | 'updatedAt'>;
+export type PostFormData = Omit<Post, 'id' | 'createdAt' | 'updatedAt' | 'publishedAt'> & {
+  publishedAt: string;
+};

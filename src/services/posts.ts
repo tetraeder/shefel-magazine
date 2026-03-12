@@ -49,8 +49,10 @@ export async function getPost(id: string): Promise<Post | null> {
 }
 
 export async function createPost(data: PostFormData): Promise<string> {
+  const { publishedAt, ...rest } = data;
   const docRef = await addDoc(collection(getAppDb(), COLLECTION), {
-    ...data,
+    ...rest,
+    publishedAt: publishedAt ? Timestamp.fromDate(new Date(publishedAt)) : null,
     createdAt: Timestamp.now(),
     updatedAt: Timestamp.now(),
   });
@@ -58,8 +60,12 @@ export async function createPost(data: PostFormData): Promise<string> {
 }
 
 export async function updatePost(id: string, data: Partial<PostFormData>): Promise<void> {
+  const { publishedAt, ...rest } = data;
   await updateDoc(doc(getAppDb(), COLLECTION, id), {
-    ...data,
+    ...rest,
+    ...(publishedAt !== undefined
+      ? { publishedAt: publishedAt ? Timestamp.fromDate(new Date(publishedAt)) : null }
+      : {}),
     updatedAt: Timestamp.now(),
   });
 }
