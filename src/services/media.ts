@@ -7,7 +7,6 @@ import {
   deleteDoc,
   query,
   where,
-  orderBy,
   Timestamp,
 } from 'firebase/firestore';
 import { getAppDb } from '../firebase';
@@ -16,19 +15,29 @@ import type { MediaItem, MediaFormData } from '../types/media';
 const COLLECTION = 'media';
 
 export async function getAllMedia(): Promise<MediaItem[]> {
-  const q = query(collection(getAppDb(), COLLECTION), orderBy('order', 'asc'));
+  const snapshot = await getDocs(collection(getAppDb(), COLLECTION));
+  const items = snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as MediaItem));
+  return items.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+}
+
+export async function getMediaByIssue(issueId: string): Promise<MediaItem[]> {
+  const q = query(
+    collection(getAppDb(), COLLECTION),
+    where('issueId', '==', issueId)
+  );
   const snapshot = await getDocs(q);
-  return snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as MediaItem));
+  const items = snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as MediaItem));
+  return items.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 }
 
 export async function getMediaByTag(tagId: string): Promise<MediaItem[]> {
   const q = query(
     collection(getAppDb(), COLLECTION),
-    where('tags', 'array-contains', tagId),
-    orderBy('order', 'asc')
+    where('tags', 'array-contains', tagId)
   );
   const snapshot = await getDocs(q);
-  return snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as MediaItem));
+  const items = snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as MediaItem));
+  return items.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 }
 
 export async function createMedia(data: MediaFormData): Promise<string> {

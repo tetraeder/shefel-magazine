@@ -6,6 +6,7 @@ export interface MediaItem {
   cloudinaryUrl: string;
   thumbnailUrl: string;
   tags: string[];
+  issueId: string;
   order: number;
   publishedAt: Timestamp | null;
   createdAt: Timestamp;

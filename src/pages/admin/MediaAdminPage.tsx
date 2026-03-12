@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useMedia } from '../../hooks/useMedia';
 import { useTags } from '../../hooks/useTags';
+import { useIssues } from '../../hooks/useIssues';
 import { createMedia, updateMedia, deleteMedia } from '../../services/media';
 import type { MediaItem, MediaFormData } from '../../types/media';
 import { Spinner } from '../../components/ui/Spinner';
@@ -15,6 +16,7 @@ const emptyForm: MediaFormData = {
   cloudinaryUrl: '',
   thumbnailUrl: '',
   tags: [],
+  issueId: '',
   order: 0,
   publishedAt: '',
 };
@@ -22,6 +24,7 @@ const emptyForm: MediaFormData = {
 export function MediaAdminPage() {
   const { media, loading, refetch } = useMedia();
   const { tags } = useTags();
+  const { issues } = useIssues();
   const [editing, setEditing] = useState<MediaItem | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState<MediaFormData>(emptyForm);
@@ -40,6 +43,7 @@ export function MediaAdminPage() {
       cloudinaryUrl: item.cloudinaryUrl,
       thumbnailUrl: item.thumbnailUrl,
       tags: item.tags,
+      issueId: item.issueId || '',
       order: item.order,
       publishedAt: tsToDateStr(item.publishedAt),
     });
@@ -127,6 +131,22 @@ export function MediaAdminPage() {
                 className="w-full border-2 border-gray-300 rounded px-3 py-2 text-sm"
                 dir="ltr"
               />
+            </div>
+            <div>
+              <label className="block font-body font-bold text-sm mb-1">גיליון</label>
+              <select
+                value={form.issueId}
+                onChange={(e) => setForm({ ...form, issueId: e.target.value })}
+                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-sm"
+              >
+                <option value="">בחר גיליון</option>
+                {issues.map((issue) => (
+                  <option key={issue.id} value={issue.id}>
+                    {issue.title || `${issue.month}/${issue.year}`}
+                    {issue.isCurrent ? ' (נוכחי)' : ''}
+                  </option>
+                ))}
+              </select>
             </div>
             <div>
               <label className="block font-body font-bold text-sm mb-1">סדר</label>

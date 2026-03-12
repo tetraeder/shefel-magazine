@@ -8,7 +8,6 @@ import {
   deleteDoc,
   query,
   where,
-  orderBy,
   Timestamp,
 } from 'firebase/firestore';
 import { getAppDb } from '../firebase';
@@ -19,27 +18,27 @@ const COLLECTION = 'posts';
 export async function getPostsByIssue(issueId: string): Promise<Post[]> {
   const q = query(
     collection(getAppDb(), COLLECTION),
-    where('issueId', '==', issueId),
-    orderBy('order', 'asc')
+    where('issueId', '==', issueId)
   );
   const snapshot = await getDocs(q);
-  return snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Post));
+  const posts = snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Post));
+  return posts.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 }
 
 export async function getPostsByTag(tagId: string): Promise<Post[]> {
   const q = query(
     collection(getAppDb(), COLLECTION),
-    where('tags', 'array-contains', tagId),
-    orderBy('createdAt', 'desc')
+    where('tags', 'array-contains', tagId)
   );
   const snapshot = await getDocs(q);
-  return snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Post));
+  const posts = snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Post));
+  return posts.sort((a, b) => (b.createdAt?.seconds ?? 0) - (a.createdAt?.seconds ?? 0));
 }
 
 export async function getAllPosts(): Promise<Post[]> {
-  const q = query(collection(getAppDb(), COLLECTION), orderBy('createdAt', 'desc'));
-  const snapshot = await getDocs(q);
-  return snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Post));
+  const snapshot = await getDocs(collection(getAppDb(), COLLECTION));
+  const posts = snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Post));
+  return posts.sort((a, b) => (b.createdAt?.seconds ?? 0) - (a.createdAt?.seconds ?? 0));
 }
 
 export async function getPost(id: string): Promise<Post | null> {
