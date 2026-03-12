@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { MediaItem } from '../../types/media';
 import type { Tag } from '../../types/tag';
 import { TagChip } from './TagChip';
+import { ShareButton } from './ShareButton';
 
 interface MediaCarouselCardProps {
   item: MediaItem;
@@ -16,7 +17,7 @@ export function MediaCarouselCard({ item, tagsMap }: MediaCarouselCardProps) {
     .filter(Boolean);
 
   return (
-    <article className="bg-shefel-yellow rounded-lg overflow-hidden border-4 border-shefel-red shadow-lg flex flex-col">
+    <article className="bg-shefel-yellow rounded-none overflow-hidden border-4 border-shefel-red shadow-lg flex flex-col">
       <div
         className="relative aspect-[9/16] bg-shefel-black cursor-pointer"
         onClick={() => !playing && setPlaying(true)}
@@ -50,6 +51,7 @@ export function MediaCarouselCard({ item, tagsMap }: MediaCarouselCardProps) {
       </div>
       <div className="p-3 shrink-0">
         <div className="flex items-center justify-center gap-2">
+          <ShareButton url={`${window.location.origin}/media?v=${item.id}`} title={item.title} />
           <p className="font-display font-bold text-shefel-black text-lg">
             {item.title}
           </p>

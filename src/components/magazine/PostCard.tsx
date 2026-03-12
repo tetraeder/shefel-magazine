@@ -12,7 +12,7 @@ interface PostCardProps {
 
 function PostCardSkeleton() {
   return (
-    <div className="bg-shefel-white rounded-lg overflow-hidden border-4 border-shefel-red/20 shadow-lg animate-pulse">
+    <div className="bg-shefel-white rounded-none overflow-hidden border-4 border-shefel-red/20 shadow-lg animate-pulse">
       <div className="p-4 space-y-3">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-shefel-red/10 shrink-0" />
@@ -47,7 +47,7 @@ export function PostCard({ post, tagsMap }: PostCardProps) {
   // No embed — render immediately
   if (!hasEmbed) {
     return (
-      <article className="bg-shefel-yellow rounded-lg overflow-hidden border-4 border-shefel-red shadow-lg flex flex-col">
+      <article className="bg-shefel-yellow rounded-none overflow-hidden border-4 border-shefel-red shadow-lg flex flex-col">
         <div className="min-h-0">
           <img
             src={post.imageUrl}
@@ -75,7 +75,7 @@ export function PostCard({ post, tagsMap }: PostCardProps) {
       <div
         className={
           embedLoaded
-            ? 'bg-shefel-yellow rounded-lg overflow-hidden border-4 border-shefel-red shadow-lg flex flex-col'
+            ? 'bg-shefel-yellow rounded-none overflow-hidden border-4 border-shefel-red shadow-lg flex flex-col'
             : 'absolute top-0 left-0 w-full'
         }
         style={embedLoaded ? undefined : { clipPath: 'inset(100%)', overflow: 'hidden' }}
