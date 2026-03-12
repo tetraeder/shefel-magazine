@@ -1,4 +1,5 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useMedia } from '../../hooks/useMedia';
 import { useTags } from '../../hooks/useTags';
 import { MediaCard } from '../../components/magazine/MediaCard';
@@ -10,8 +11,20 @@ type SortOrder = 'newest' | 'oldest';
 export function MediaPage() {
   const { media, loading } = useMedia();
   const { tags } = useTags();
+  const [searchParams] = useSearchParams();
+  const highlightId = searchParams.get('v');
   const [activeTag, setActiveTag] = useState<string | null>(null);
   const [sort, setSort] = useState<SortOrder>('newest');
+  const scrolledRef = useRef(false);
+
+  useEffect(() => {
+    if (!highlightId || loading || scrolledRef.current) return;
+    const el = document.getElementById(`media-${highlightId}`);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      scrolledRef.current = true;
+    }
+  }, [highlightId, loading]);
 
   const tagsMap: Record<string, Tag> = {};
   for (const tag of tags) {
@@ -98,7 +111,9 @@ export function MediaPage() {
       ) : (
         <div key={`${activeTag}-${sort}`} className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 grid-animate">
           {sorted.map((item) => (
-            <MediaCard key={item.id} item={item} tagsMap={tagsMap} />
+            <div key={item.id} id={`media-${item.id}`} className={highlightId === item.id ? 'ring-4 ring-shefel-red rounded-lg' : ''}>
+              <MediaCard item={item} tagsMap={tagsMap} />
+            </div>
           ))}
         </div>
       )}

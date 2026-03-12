@@ -25,6 +25,7 @@ const router = createBrowserRouter([
     element: <Shell />,
     children: [
       { path: '/', element: <MediaPage /> },
+      { path: '/media', element: <MediaPage /> },
       { path: '/magazine', element: <HomePage /> },
       { path: '/issue/:year/:month', element: <IssuePage /> },
       { path: '/tag/:slug', element: <TagPage /> },
