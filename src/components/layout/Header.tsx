@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { SocialLinks } from './SocialLinks';
 
 const navLinks = [
-  { to: '/', label: 'גיליון נוכחי' },
-  { to: '/archive', label: 'ארכיון' },
+  { to: '/', label: 'מגזין שפל' },
   { to: '/90seconds', label: 'פסטיבל 90 שניות' },
   { to: '/about', label: 'עלינו' },
   { to: '/contact', label: 'דברו איתנו' },
@@ -22,13 +22,7 @@ export function Header() {
             to="/"
             className="font-body font-bold text-shefel-red hover:text-shefel-black transition-colors no-underline"
           >
-            גיליון נוכחי
-          </Link>
-          <Link
-            to="/archive"
-            className="font-body font-bold text-shefel-red hover:text-shefel-black transition-colors no-underline"
-          >
-            ארכיון
+            מגזין שפל
           </Link>
         </nav>
 
@@ -39,19 +33,16 @@ export function Header() {
           aria-label="תפריט"
         >
           <span
-            className={`block w-6 h-0.5 bg-shefel-red transition-transform duration-300 ${
-              menuOpen ? 'rotate-45 translate-y-2' : ''
-            }`}
+            className={`block w-6 h-0.5 bg-shefel-red transition-transform duration-300 ${menuOpen ? 'rotate-45 translate-y-2' : ''
+              }`}
           />
           <span
-            className={`block w-6 h-0.5 bg-shefel-red transition-opacity duration-300 ${
-              menuOpen ? 'opacity-0' : ''
-            }`}
+            className={`block w-6 h-0.5 bg-shefel-red transition-opacity duration-300 ${menuOpen ? 'opacity-0' : ''
+              }`}
           />
           <span
-            className={`block w-6 h-0.5 bg-shefel-red transition-transform duration-300 ${
-              menuOpen ? '-rotate-45 -translate-y-2' : ''
-            }`}
+            className={`block w-6 h-0.5 bg-shefel-red transition-transform duration-300 ${menuOpen ? '-rotate-45 -translate-y-2' : ''
+              }`}
           />
         </button>
 
@@ -84,6 +75,13 @@ export function Header() {
           >
             דברו איתנו
           </Link>
+          <SocialLinks
+            showLabels
+            labelType="desktop"
+            className="flex items-center gap-3 mr-2 border-r border-shefel-red pr-4"
+            linkClassName="flex items-center gap-1 text-shefel-red hover:text-shefel-black transition-colors no-underline font-body text-sm font-bold"
+            iconClassName="w-4 h-4"
+          />
         </nav>
       </div>
 
@@ -95,11 +93,10 @@ export function Header() {
               key={link.to}
               to={link.to}
               onClick={() => setMenuOpen(false)}
-              className={`menu-link font-display font-black text-3xl no-underline transition-colors ${
-                location.pathname === link.to
+              className={`menu-link font-display font-black text-3xl no-underline transition-colors ${location.pathname === link.to
                   ? 'text-shefel-black'
                   : 'text-shefel-yellow hover:text-shefel-white'
-              }`}
+                }`}
               style={{ animationDelay: `${i * 50}ms` }}
             >
               {link.label}

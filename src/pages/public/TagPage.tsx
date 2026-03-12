@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useEffect, useState, useMemo } from 'react';
 import type { Tag } from '../../types/tag';
 import { getTagBySlug } from '../../services/tags';
@@ -53,9 +53,12 @@ export function TagPage() {
         <h1 className="font-display font-black text-shefel-red text-4xl">
           {tag.name}
         </h1>
-        <p className="font-body text-shefel-black mt-2">
-          כל הפוסטים עם התגית
-        </p>
+        <Link
+          to="/"
+          className="inline-block font-body font-bold text-shefel-red hover:text-shefel-black transition-colors no-underline mt-2"
+        >
+          ← חזרה למגזין
+        </Link>
       </div>
       <PostGrid posts={posts} tagsMap={tagsMap} />
     </>
