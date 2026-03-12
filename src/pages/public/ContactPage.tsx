@@ -35,8 +35,8 @@ export function ContactPage() {
       </h1>
 
       <div className="bg-shefel-red rounded-lg border-4 border-shefel-red p-8 space-y-6">
-        <h3 className="font-display font-bold text-shefel-yellow text-2xl leading-relaxed">
-          היי! אפשר לדבר איתנו באינסטגרם של{' '}
+        <p className="font-body text-shefel-yellow text-lg leading-relaxed">
+          אפשר למצוא אותנו באינסטגרם של{' '}
           <a
             href="https://www.instagram.com/kaduregelshefel/"
             target="_blank"
@@ -53,9 +53,8 @@ export function ContactPage() {
             className="underline hover:text-shefel-white transition-colors"
           >
             השפל שופ
-          </a>{' '}
-          בכל עניין
-        </h3>
+          </a>
+        </p>
 
         <p className="font-body text-shefel-yellow text-lg leading-relaxed">
           <a

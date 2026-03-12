@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { SocialLinks } from './SocialLinks';
 
 export function Footer() {
@@ -11,14 +12,12 @@ export function Footer() {
           iconClassName="w-4 h-4"
         />
         <p className="font-bold">&copy; {new Date().getFullYear()} כדורגל שפל. כל הזכויות שמורות.</p>
-        <a
-          href="https://shefelstudio.com/acc/"
-          target="_blank"
-          rel="noopener noreferrer"
+        <Link
+          to="/accessibility"
           className="inline-block mt-2 text-shefel-yellow/70 hover:text-shefel-white transition-colors no-underline font-display text-xs"
         >
           הצהרת נגישות
-        </a>
+        </Link>
       </div>
     </footer>
   );

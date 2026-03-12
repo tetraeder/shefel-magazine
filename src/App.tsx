@@ -12,6 +12,7 @@ import { ArchivePage } from './pages/public/ArchivePage';
 import { AboutPage } from './pages/public/AboutPage';
 import { ContactPage } from './pages/public/ContactPage';
 import { FestivalPage } from './pages/public/FestivalPage';
+import { AccessibilityPage } from './pages/public/AccessibilityPage';
 import { DashboardPage } from './pages/admin/DashboardPage';
 import { PostsPage } from './pages/admin/PostsPage';
 import { TagsPage } from './pages/admin/TagsPage';
@@ -33,6 +34,7 @@ const router = createBrowserRouter([
       { path: '/about', element: <AboutPage /> },
       { path: '/contact', element: <ContactPage /> },
       { path: '/90seconds', element: <FestivalPage /> },
+      { path: '/accessibility', element: <AccessibilityPage /> },
     ],
   },
   {
