@@ -59,7 +59,7 @@ export function Header() {
             <Link
               key={link.to}
               to={link.to}
-              className={`font-body font-bold text-base whitespace-nowrap hover:text-shefel-black transition-colors no-underline ${
+              className={`font-body font-bold text-xl whitespace-nowrap hover:text-shefel-black transition-colors no-underline ${
                 location.pathname === link.to ? 'text-shefel-black' : 'text-shefel-red'
               }`}
             >
@@ -71,8 +71,8 @@ export function Header() {
             showLabels
             labelType="desktop"
             className="flex items-center gap-3"
-            linkClassName="flex items-center gap-1 text-shefel-red hover:text-shefel-black transition-colors no-underline font-body text-sm font-bold whitespace-nowrap"
-            iconClassName="w-4 h-4"
+            linkClassName="flex items-center gap-1 text-shefel-red hover:text-shefel-black transition-colors no-underline font-body text-xl font-bold whitespace-nowrap"
+            iconClassName="w-5 h-5"
           />
         </nav>
       </div>

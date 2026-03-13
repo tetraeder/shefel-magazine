@@ -35,7 +35,7 @@ export function ContactPage() {
       </h1>
 
       <div className="bg-shefel-red rounded-lg border-4 border-shefel-red p-8 space-y-6">
-        <p className="font-body text-shefel-yellow text-lg leading-relaxed">
+        <p className="font-body text-shefel-yellow text-2xl leading-relaxed">
           אפשר למצוא אותנו באינסטגרם של{' '}
           <a
             href="https://www.instagram.com/kaduregelshefel/"
@@ -56,7 +56,7 @@ export function ContactPage() {
           </a>
         </p>
 
-        <p className="font-body text-shefel-yellow text-lg leading-relaxed">
+        <p className="font-body text-shefel-yellow text-2xl leading-relaxed">
           <a
             href="http://instagram.com/ligashirts"
             target="_blank"
@@ -68,7 +68,7 @@ export function ContactPage() {
           – פוטלגים ושחזורים, באינסטגרם של ליגה
         </p>
 
-        <p className="font-body text-shefel-yellow text-lg leading-relaxed">
+        <p className="font-body text-shefel-yellow text-2xl leading-relaxed">
           להרשמה לניוזלטר ועדכונים טקסט{' '}
           <a
             href="https://docs.google.com/forms/d/e/1FAIpQLSdaVclAPwJ641OeXIO23DT3GZ9vALegcOyDy78FQR1gozkGiQ/viewform?usp=dialog"
@@ -102,7 +102,7 @@ export function ContactPage() {
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block font-body font-bold text-shefel-red text-sm mb-1">
+              <label className="block font-body font-bold text-shefel-red text-xl mb-1">
                 שם *
               </label>
               <input
@@ -115,7 +115,7 @@ export function ContactPage() {
             </div>
 
             <div>
-              <label className="block font-body font-bold text-shefel-red text-sm mb-1">
+              <label className="block font-body font-bold text-shefel-red text-xl mb-1">
                 אימייל
               </label>
               <input
@@ -127,7 +127,7 @@ export function ContactPage() {
             </div>
 
             <div>
-              <label className="block font-body font-bold text-shefel-red text-sm mb-1">
+              <label className="block font-body font-bold text-shefel-red text-xl mb-1">
                 הודעה *
               </label>
               <textarea

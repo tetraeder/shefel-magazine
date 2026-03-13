@@ -60,7 +60,7 @@ export function MediaPage() {
           <>
             <button
               onClick={() => setActiveTag(null)}
-              className={`px-3 py-1 text-sm font-bold rounded-full border-2 transition-all duration-200 active:scale-95 ${
+              className={`px-4 py-1.5 text-base font-bold rounded-full border-2 transition-all duration-200 active:scale-95 ${
                 activeTag === null
                   ? 'bg-shefel-red text-shefel-yellow border-shefel-yellow'
                   : 'bg-shefel-yellow text-shefel-red border-shefel-red hover:bg-shefel-red hover:text-shefel-yellow'
@@ -72,7 +72,7 @@ export function MediaPage() {
               <button
                 key={tag.id}
                 onClick={() => setActiveTag(tag.id)}
-                className={`px-3 py-1 text-sm font-bold rounded-full border-2 transition-colors ${
+                className={`px-4 py-1.5 text-base font-bold rounded-full border-2 transition-colors ${
                   activeTag === tag.id
                     ? 'bg-shefel-red text-shefel-yellow border-shefel-yellow'
                     : 'bg-shefel-yellow text-shefel-red border-shefel-red hover:bg-shefel-red hover:text-shefel-yellow'
@@ -86,7 +86,7 @@ export function MediaPage() {
         )}
         <button
           onClick={() => setSort('newest')}
-          className={`px-3 py-1 text-sm font-bold rounded-full border-2 transition-all duration-200 active:scale-95 ${
+          className={`px-4 py-1.5 text-base font-bold rounded-full border-2 transition-all duration-200 active:scale-95 ${
             sort === 'newest'
               ? 'bg-shefel-red text-shefel-yellow border-shefel-yellow'
               : 'bg-shefel-yellow text-shefel-red border-shefel-red/30 hover:border-shefel-red'
@@ -96,7 +96,7 @@ export function MediaPage() {
         </button>
         <button
           onClick={() => setSort('oldest')}
-          className={`px-3 py-1 text-sm font-bold rounded-full border-2 transition-all duration-200 active:scale-95 ${
+          className={`px-4 py-1.5 text-base font-bold rounded-full border-2 transition-all duration-200 active:scale-95 ${
             sort === 'oldest'
               ? 'bg-shefel-red text-shefel-yellow border-shefel-yellow'
               : 'bg-shefel-yellow text-shefel-red border-shefel-red/30 hover:border-shefel-red'

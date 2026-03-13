@@ -21,21 +21,21 @@ export function FestivalPage() {
           פסטיבל סרטונים נושא פרסים
         </p>
 
-        <p className="font-body text-shefel-yellow text-lg leading-relaxed">
+        <p className="font-body text-shefel-yellow text-2xl leading-relaxed">
           צאו החוצה, סעו למקומות שלא הייתם בהם אף פעם ותחוו את הקסם.
           <br />
           צלמו וערכו לסרטון בנושא &quot;נסיעה למשחק&quot; באורך 90 שניות ושלחו אלינו.
         </p>
 
-        <p className="font-body text-shefel-yellow text-lg leading-relaxed">
+        <p className="font-body text-shefel-yellow text-2xl leading-relaxed">
           הכדורגל שלנו הוא מעבר למשחק של 90 דקות. הוא חוויה של שותפות, של יצרים, של מפגש, הוא מיקרו-קוסמוס של התרבות בה אנחנו חיים.
         </p>
 
-        <p className="font-body text-shefel-yellow text-lg leading-relaxed">
+        <p className="font-body text-shefel-yellow text-2xl leading-relaxed">
           אנחנו חיים במקום מיוחד, מגוון, ויפהפה. הנופים והתרבות פה ייחודיים ומרגשים. ההתרגשות לפני המשחק, הנסיעה אליו והמפגש עם מקומות וקבוצות אחרות הוא הזדמנות. אנחנו מזמינים אתכם להיות סוכנים של תרבות כדורגל יפה ומקרבת.
         </p>
 
-        <p className="font-body text-shefel-yellow text-lg leading-relaxed">
+        <p className="font-body text-shefel-yellow text-2xl leading-relaxed">
           המשחק יכול להיות משחק רשמי, בשכונה, ליגה למקומות עבודה או כל משחק כדורגל שאתם רוצים שנכיר.
           <br />
           אפשר לעשות דוקו, עלילתי, קליפ, וולוג או דבר אחר שעולה לכם ולכן בראש.
@@ -45,7 +45,7 @@ export function FestivalPage() {
           <p className="font-display font-bold text-shefel-yellow text-xl">
             על הסרטון לכלול:
           </p>
-          <ul className="font-body text-shefel-yellow text-lg leading-relaxed list-disc list-inside space-y-2">
+          <ul className="font-body text-shefel-yellow text-2xl leading-relaxed list-disc list-inside space-y-2">
             <li>
               סימון דרך – שילוט כבישים, שילוט בית עסק, מתנ&quot;ס או כל דבר אחר שיסמן לנו איפה אנחנו נמצאים.
             </li>
@@ -58,7 +58,7 @@ export function FestivalPage() {
           <p className="font-display font-bold text-shefel-yellow text-xl">
             חשוב לדעת:
           </p>
-          <ul className="font-body text-shefel-yellow text-lg leading-relaxed list-disc list-inside space-y-2">
+          <ul className="font-body text-shefel-yellow text-2xl leading-relaxed list-disc list-inside space-y-2">
             <li>
               אסור – שפה פוגענית, מזלזלת, גזענות ושאר דברים פוגעניים. המטרה היא להנגיש את תרבות הכדורגל בישראל בצורה חיובית ומקרבת.
             </li>
@@ -87,13 +87,13 @@ export function FestivalPage() {
           <p className="font-display font-bold text-shefel-yellow text-xl">
             הפרסים:
           </p>
-          <p className="font-body text-shefel-yellow text-lg">
+          <p className="font-body text-shefel-yellow text-2xl">
             ✷ אירוע הקרנה חגיגי והכרזה על הזוכים
           </p>
-          <p className="font-body text-shefel-yellow text-lg">
+          <p className="font-body text-shefel-yellow text-2xl">
             ✷ הצגה באתר ייעודי ובחשבון האינסטגרם של כדורגל שפל
           </p>
-          <p className="font-body text-shefel-yellow text-lg">
+          <p className="font-body text-shefel-yellow text-2xl">
             ✷ פרסים כספיים לעשרת הסרטונים המובילים
           </p>
         </div>

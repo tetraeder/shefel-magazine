@@ -9,12 +9,13 @@
   --color-shefel-red-light: #FF4444;
   --color-shefel-gray: #F5F5F5;
 
-  --font-display: 'Heebo', sans-serif;
-  --font-body: 'Heebo', sans-serif;
+  --font-sans: "HaimBody", "Heebo", sans-serif;
+  --font-display: "HaimDisplay", "Heebo", sans-serif;
+  --font-body: "HaimBody", "Heebo", sans-serif;
 }
 
 body {
-  font-family: var(--font-body);
+  font-family: "HaimBody", "Heebo", sans-serif !important;
   color: var(--color-shefel-black);
   background-color: var(--color-shefel-yellow);
   direction: rtl;

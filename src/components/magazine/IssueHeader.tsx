@@ -19,7 +19,7 @@ export function IssueHeader({ title, description, showArchiveLink }: IssueHeader
             {title}
           </h1>
           {description && (
-            <p className="font-body text-shefel-black text-base mb-2">
+            <p className="font-body text-shefel-black text-2xl mb-2">
               {description}
             </p>
           )}
