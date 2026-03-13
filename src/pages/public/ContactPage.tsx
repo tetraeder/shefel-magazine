@@ -9,7 +9,7 @@ export function ContactPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.name.trim() || !form.message.trim()) return;
+    if (!form.name.trim() || !form.email.trim() || !form.message.trim()) return;
     setStatus('sending');
     try {
       if (!isMockMode()) {
@@ -69,7 +69,7 @@ export function ContactPage() {
         </p>
 
         <p className="font-body text-shefel-yellow text-2xl leading-relaxed">
-          להרשמה לניוזלטר ועדכונים טקסט{' '}
+          להרשמה לניוזלטר ועדכונים{' '}
           <a
             href="https://docs.google.com/forms/d/e/1FAIpQLSdaVclAPwJ641OeXIO23DT3GZ9vALegcOyDy78FQR1gozkGiQ/viewform?usp=dialog"
             target="_blank"
@@ -116,10 +116,11 @@ export function ContactPage() {
 
             <div>
               <label className="block font-body font-bold text-shefel-red text-xl mb-1">
-                אימייל
+                אימייל *
               </label>
               <input
                 type="email"
+                required
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
                 className="w-full px-4 py-2 rounded-lg border-2 border-shefel-red/30 focus:border-shefel-red outline-none font-body text-shefel-black"
