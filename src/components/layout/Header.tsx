@@ -6,6 +6,7 @@ const navLinks = [
   { to: '/', label: 'מדיה' },
   { to: '/magazine', label: 'מגזין שפל' },
   { to: '/90seconds', label: 'פסטיבל 90 שניות' },
+  { to: '/embed', label: 'מפה' },
   { to: '/about', label: 'עלינו' },
   { to: '/contact', label: 'דברו איתנו' },
 ];

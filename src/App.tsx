@@ -20,6 +20,7 @@ import { IssuesPage } from './pages/admin/IssuesPage';
 import { MediaPage } from './pages/public/MediaPage';
 import { MediaAdminPage } from './pages/admin/MediaAdminPage';
 import { SeedPage } from './pages/admin/SeedPage';
+import { EmbedPage } from './pages/public/EmbedPage';
 
 const router = createBrowserRouter([
   {
@@ -35,6 +36,7 @@ const router = createBrowserRouter([
       { path: '/contact', element: <ContactPage /> },
       { path: '/90seconds', element: <FestivalPage /> },
       { path: '/accessibility', element: <AccessibilityPage /> },
+      { path: '/embed', element: <EmbedPage /> },
     ],
   },
   {
