@@ -27,6 +27,7 @@ export function MediaCard({ item, tagsMap, autoPlay = false }: MediaCardProps) {
           <video
             src={item.cloudinaryUrl}
             autoPlay
+            muted={autoPlay}
             controls
             playsInline
             className="w-full h-full object-cover"
