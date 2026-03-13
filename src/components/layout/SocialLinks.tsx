@@ -1,7 +1,7 @@
 const links = [
   {
     href: 'https://www.instagram.com/kaduregelshefel',
-    label: 'כדורגל שפל',
+    label: 'שפל',
     desktopLabel: 'שפל',
     icon: 'instagram',
   },

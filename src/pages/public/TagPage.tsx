@@ -1,4 +1,4 @@
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useLocation } from 'react-router-dom';
 import { useEffect, useState, useMemo } from 'react';
 import type { Tag } from '../../types/tag';
 import type { Post } from '../../types/post';
@@ -17,8 +17,18 @@ type GridItem =
   | { type: 'post'; data: Post; time: number }
   | { type: 'media'; data: MediaItem; time: number };
 
+function getBackLabel(path: string): string {
+  if (path === '/' || path === '/media') return '← חזרה למדיה';
+  if (path === '/magazine') return '← חזרה למגזין';
+  if (path.startsWith('/issue/')) return '← חזרה לגיליון';
+  return '← חזרה';
+}
+
 export function TagPage() {
   const { slug } = useParams<{ slug: string }>();
+  const location = useLocation();
+  const from: string = (location.state as { from?: string })?.from ?? '/';
+  const backLabel = getBackLabel(from);
   const [tag, setTag] = useState<Tag | null>(null);
   const [loading, setLoading] = useState(true);
   const [sort, setSort] = useState<SortOrder>('newest');
@@ -79,10 +89,10 @@ export function TagPage() {
           {tag.name}
         </h1>
         <Link
-          to="/"
+          to={from}
           className="inline-block font-body font-bold text-shefel-red hover:text-shefel-black transition-colors no-underline mt-2"
         >
-          ← חזרה למגזין
+          {backLabel}
         </Link>
       </div>
 
@@ -118,7 +128,7 @@ export function TagPage() {
           </p>
         </div>
       ) : (
-        <div key={sort} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto px-4 grid-animate">
+        <div key={sort} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto px-4 grid-animate">
           {allItems.map((item) =>
             item.type === 'post' ? (
               <PostCard key={item.data.id} post={item.data} tagsMap={tagsMap} />

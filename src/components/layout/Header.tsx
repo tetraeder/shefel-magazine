@@ -6,7 +6,7 @@ const navLinks = [
   { to: '/', label: 'מדיה' },
   { to: '/magazine', label: 'מגזין שפל' },
   { to: '/90seconds', label: 'פסטיבל 90 שניות' },
-  { to: '/embed', label: 'מפה' },
+  { to: '/embed', label: 'מפת שפל' },
   { to: '/about', label: 'עלינו' },
   { to: '/contact', label: 'דברו איתנו' },
 ];
@@ -60,9 +60,8 @@ export function Header() {
             <Link
               key={link.to}
               to={link.to}
-              className={`font-body font-bold text-xl whitespace-nowrap hover:text-shefel-black transition-colors no-underline ${
-                location.pathname === link.to ? 'text-shefel-black' : 'text-shefel-red'
-              }`}
+              className={`font-body font-bold text-xl whitespace-nowrap hover:text-shefel-black transition-colors no-underline ${location.pathname === link.to ? 'text-shefel-black' : 'text-shefel-red'
+                }`}
             >
               {link.label}
             </Link>
@@ -71,8 +70,8 @@ export function Header() {
           <SocialLinks
             showLabels
             labelType="desktop"
-            className="flex items-center gap-3"
-            linkClassName="flex items-center gap-1 text-shefel-red hover:text-shefel-black transition-colors no-underline font-body text-xl font-bold whitespace-nowrap"
+            className="flex items-center gap-4"
+            linkClassName="flex items-center gap-1.5 text-shefel-red hover:text-shefel-black transition-colors no-underline font-body text-xl font-bold whitespace-nowrap"
             iconClassName="w-5 h-5"
           />
         </nav>
@@ -87,8 +86,8 @@ export function Header() {
               to={link.to}
               onClick={() => setMenuOpen(false)}
               className={`menu-link font-display font-black text-3xl no-underline transition-colors ${location.pathname === link.to
-                  ? 'text-shefel-black'
-                  : 'text-shefel-yellow hover:text-shefel-white'
+                ? 'text-shefel-black'
+                : 'text-shefel-yellow hover:text-shefel-white'
                 }`}
               style={{ animationDelay: `${i * 50}ms` }}
             >
