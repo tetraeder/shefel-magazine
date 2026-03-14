@@ -54,14 +54,13 @@ export function PostCard({ post, tagsMap }: PostCardProps) {
       {/* Loading spinner — minimal, no card UI until embed is ready */}
       {!embedLoaded && <EmbedLoadingIndicator />}
 
-      {/* Embed container — clipped invisible while loading, normal card when loaded */}
+      {/* Embed container — fully hidden while loading, normal card when loaded */}
       <div
         className={
           embedLoaded
             ? 'bg-shefel-yellow rounded-none overflow-hidden border-4 border-shefel-red shadow-lg flex flex-col'
-            : 'absolute top-0 left-0 w-full'
+            : 'invisible absolute top-0 left-0 w-full h-0 overflow-hidden'
         }
-        style={embedLoaded ? undefined : { clipPath: 'inset(100%)', overflow: 'hidden' }}
       >
         <div className="min-h-0">
           <InstagramEmbed url={post.instagramUrl!} onLoaded={onLoaded} />
