@@ -88,8 +88,8 @@ export function SocialLinks({
               className={linkClassName}
               aria-label={link.label}
             >
-              <Icon className={iconClassName} />
-              {showLabels && <span>{text}</span>}
+              <Icon className={`${iconClassName} shrink-0`} />
+              {showLabels && <span className="leading-none">{text}</span>}
             </a>
           </li>
         );
