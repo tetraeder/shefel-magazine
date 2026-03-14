@@ -110,9 +110,9 @@ export function MediaPage() {
         <p className="text-center text-gray-500 font-body">אין תוכן מדיה עדיין</p>
       ) : (
         <div key={`${activeTag}-${sort}`} className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 grid-animate">
-          {sorted.map((item) => (
+          {sorted.map((item, index) => (
             <div key={item.id} id={`media-${item.id}`} className={highlightId === item.id ? 'pb-2 pr-2' : ''}>
-              <MediaCard item={item} tagsMap={tagsMap} autoPlay={highlightId === item.id} />
+              <MediaCard item={item} tagsMap={tagsMap} autoPlay={highlightId === item.id || (!highlightId && index === 0)} />
             </div>
           ))}
         </div>

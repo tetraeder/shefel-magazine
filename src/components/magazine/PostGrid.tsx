@@ -114,7 +114,7 @@ export function PostGrid({ items, posts, tagsMap }: PostGridProps) {
               {item.type === 'post' ? (
                 <PostCard post={item.data} tagsMap={tagsMap} />
               ) : (
-                <MediaCarouselCard item={item.data} tagsMap={tagsMap} />
+                <MediaCarouselCard item={item.data} tagsMap={tagsMap} isActive={isActive} />
               )}
             </div>
           );
