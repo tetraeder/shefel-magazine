@@ -10,27 +10,10 @@ interface PostCardProps {
   tagsMap: Record<string, Tag>;
 }
 
-function PostCardSkeleton() {
+function EmbedLoadingIndicator() {
   return (
-    <div className="bg-shefel-white rounded-none overflow-hidden border-4 border-shefel-red/20 shadow-lg animate-pulse">
-      <div className="p-4 space-y-3">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-shefel-red/10 shrink-0" />
-          <div className="flex-1 space-y-2">
-            <div className="h-3 bg-shefel-red/10 rounded w-2/5" />
-            <div className="h-2 bg-shefel-red/8 rounded w-1/4" />
-          </div>
-        </div>
-        <div className="aspect-[4/5] bg-shefel-red/8 rounded" />
-        <div className="space-y-2 pt-1">
-          <div className="h-3 bg-shefel-red/10 rounded w-4/5" />
-          <div className="h-3 bg-shefel-red/8 rounded w-3/5" />
-        </div>
-        <div className="flex gap-2 pt-1">
-          <div className="h-7 w-16 bg-shefel-red/10 rounded-full" />
-          <div className="h-7 w-20 bg-shefel-red/8 rounded-full" />
-        </div>
-      </div>
+    <div className="flex items-center justify-center py-8">
+      <div className="w-6 h-6 border-3 border-shefel-red/30 border-t-shefel-red rounded-full animate-spin" />
     </div>
   );
 }
@@ -68,8 +51,8 @@ export function PostCard({ post, tagsMap }: PostCardProps) {
 
   return (
     <div className="relative">
-      {/* Skeleton — normal flow, provides height */}
-      {!embedLoaded && <PostCardSkeleton />}
+      {/* Loading spinner — minimal, no card UI until embed is ready */}
+      {!embedLoaded && <EmbedLoadingIndicator />}
 
       {/* Embed container — clipped invisible while loading, normal card when loaded */}
       <div
