@@ -35,10 +35,12 @@ export function InstagramEmbed({ url, onLoaded }: InstagramEmbedProps) {
     const container = ref.current;
     if (!container) return () => clearTimeout(timer);
 
+    // Watch for iframe to appear, then wait for its content to load
     const observer = new MutationObserver(() => {
-      if (container.querySelector('iframe')) {
-        onLoaded?.();
+      const iframe = container.querySelector('iframe');
+      if (iframe) {
         observer.disconnect();
+        iframe.addEventListener('load', () => onLoaded?.());
       }
     });
     observer.observe(container, { childList: true, subtree: true });
