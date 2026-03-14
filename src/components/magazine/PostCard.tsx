@@ -12,9 +12,9 @@ interface PostCardProps {
 
 function EmbedLoadingIndicator() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
-      <div className="w-10 h-10 border-4 border-shefel-red/30 border-t-shefel-red rounded-full animate-spin" />
-      <p className="font-body font-bold text-shefel-red/60 text-sm">טוען תוכן...</p>
+    <div className="flex flex-col items-center justify-center min-h-[60vh] gap-5">
+      <div className="w-14 h-14 border-[5px] border-shefel-red/30 border-t-shefel-red rounded-full animate-spin" />
+      <p className="font-display font-bold text-shefel-red/60 text-xl">טוען תוכן</p>
     </div>
   );
 }
