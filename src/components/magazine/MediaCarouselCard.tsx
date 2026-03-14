@@ -17,7 +17,18 @@ export function MediaCarouselCard({ item, tagsMap, isActive = false }: MediaCaro
     const video = videoRef.current;
     if (!video) return;
     if (isActive) {
-      video.play().catch(() => {});
+      // Ensure video is loaded enough to play
+      if (video.readyState >= 2) {
+        video.play().catch(() => {});
+      } else {
+        const onCanPlay = () => {
+          video.play().catch(() => {});
+          video.removeEventListener('canplay', onCanPlay);
+        };
+        video.addEventListener('canplay', onCanPlay);
+        video.load();
+        return () => video.removeEventListener('canplay', onCanPlay);
+      }
     } else {
       video.pause();
     }
@@ -37,7 +48,7 @@ export function MediaCarouselCard({ item, tagsMap, isActive = false }: MediaCaro
           muted
           playsInline
           controls
-          preload="none"
+          preload="metadata"
           className="w-full h-full object-cover"
         />
       </div>
