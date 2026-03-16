@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { SocialLinks } from './SocialLinks';
+import { trackNavClick } from '../../lib/analytics';
 
 const navLinks = [
   { to: '/', label: 'מדיה' },
   { to: '/magazine', label: 'מגזין שפל' },
   { to: '/90seconds', label: 'פסטיבל 90 שניות' },
+  { to: '/name', label: 'שם מפעם' },
   { to: '/embed', label: 'מפת שפל' },
   { to: '/about', label: 'עלינו' },
   { to: '/contact', label: 'דברו איתנו' },
@@ -47,6 +49,9 @@ export function Header() {
           />
         </Link>
 
+        {/* Placeholder to keep hamburger/logo balanced */}
+        <div className="md:hidden w-10" />
+
         {/* Desktop: logo + all nav links + socials in one row */}
         <nav className="hidden md:flex items-center gap-4 w-full flex-nowrap">
           <Link to="/" className="shrink-0 ml-2">
@@ -60,6 +65,7 @@ export function Header() {
             <Link
               key={link.to}
               to={link.to}
+              onClick={() => trackNavClick(link.label, location.pathname)}
               className={`font-body font-bold text-xl whitespace-nowrap hover:text-shefel-black transition-colors no-underline ${location.pathname === link.to ? 'text-shefel-black' : 'text-shefel-red'
                 }`}
             >
@@ -84,7 +90,7 @@ export function Header() {
             <Link
               key={link.to}
               to={link.to}
-              onClick={() => setMenuOpen(false)}
+              onClick={() => { trackNavClick(link.label, location.pathname); setMenuOpen(false); }}
               className={`menu-link font-display font-black text-3xl no-underline transition-colors ${location.pathname === link.to
                 ? 'text-shefel-black'
                 : 'text-shefel-yellow hover:text-shefel-white'
@@ -94,6 +100,16 @@ export function Header() {
               {link.label}
             </Link>
           ))}
+          <a
+            href="https://docs.google.com/forms/d/e/1FAIpQLSdaVclAPwJ641OeXIO23DT3GZ9vALegcOyDy78FQR1gozkGiQ/viewform?usp=dialog"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="menu-link bg-shefel-yellow text-shefel-red font-display font-bold text-2xl px-8 py-3 rounded-lg no-underline mt-4"
+            style={{ animationDelay: `${navLinks.length * 50}ms` }}
+            onClick={() => setMenuOpen(false)}
+          >
+            להצטרפות
+          </a>
         </div>
       )}
     </header>

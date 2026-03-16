@@ -21,6 +21,7 @@ import { MediaPage } from './pages/public/MediaPage';
 import { MediaAdminPage } from './pages/admin/MediaAdminPage';
 import { SeedPage } from './pages/admin/SeedPage';
 import { EmbedPage } from './pages/public/EmbedPage';
+import { NameGeneratorPage } from './pages/public/NameGeneratorPage';
 
 const router = createBrowserRouter([
   {
@@ -37,6 +38,7 @@ const router = createBrowserRouter([
       { path: '/90seconds', element: <FestivalPage /> },
       { path: '/accessibility', element: <AccessibilityPage /> },
       { path: '/embed', element: <EmbedPage /> },
+      { path: '/name', element: <NameGeneratorPage /> },
     ],
   },
   {
