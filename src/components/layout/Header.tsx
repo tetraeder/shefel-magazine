@@ -18,7 +18,7 @@ export function Header() {
   const location = useLocation();
 
   return (
-    <header className="bg-shefel-yellow border-b-4 border-shefel-red px-4 py-3">
+    <header className="bg-shefel-yellow border-b-4 border-shefel-red px-4 py-3 relative z-50">
       <div className="max-w-6xl mx-auto flex items-center justify-between relative">
         {/* Mobile hamburger button */}
         <button
@@ -91,7 +91,7 @@ export function Header() {
 
       {/* Mobile menu overlay */}
       {menuOpen && (
-        <div className="menu-overlay md:hidden fixed inset-0 top-[68px] bg-shefel-red z-50 flex flex-col items-center justify-center gap-8">
+        <div className="menu-overlay md:hidden fixed inset-x-0 top-0 bottom-0 bg-shefel-red z-40 flex flex-col items-center justify-center gap-8 pt-20">
           {navLinks.map((link, i) => (
             <Link
               key={link.to}
@@ -108,7 +108,10 @@ export function Header() {
           ))}
           <Link
             to="/tag/שפל-בדרכים"
-            className="menu-link bg-shefel-yellow text-shefel-red font-display font-bold text-2xl px-8 py-3 rounded-lg no-underline mt-4"
+            className={`menu-link font-display font-black text-3xl no-underline transition-colors ${location.pathname === '/tag/שפל-בדרכים'
+              ? 'text-shefel-black'
+              : 'text-shefel-yellow hover:text-shefel-white'
+            }`}
             style={{ animationDelay: `${navLinks.length * 50}ms` }}
             onClick={() => setMenuOpen(false)}
           >
