@@ -20,6 +20,7 @@ import { IssuesPage } from './pages/admin/IssuesPage';
 import { MediaPage } from './pages/public/MediaPage';
 import { MediaAdminPage } from './pages/admin/MediaAdminPage';
 import { SeedPage } from './pages/admin/SeedPage';
+import { NamesAdminPage } from './pages/admin/NamesAdminPage';
 import { EmbedPage } from './pages/public/EmbedPage';
 import { NameGeneratorPage } from './pages/public/NameGeneratorPage';
 
@@ -57,6 +58,7 @@ const router = createBrowserRouter([
           { path: 'tags', element: <TagsPage /> },
           { path: 'issues', element: <IssuesPage /> },
           { path: 'media', element: <MediaAdminPage /> },
+          { path: 'names', element: <NamesAdminPage /> },
           { path: 'seed', element: <SeedPage /> },
         ],
       },

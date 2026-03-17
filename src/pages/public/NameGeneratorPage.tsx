@@ -1,14 +1,14 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { collection, addDoc, getDocs, query, where, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, getDocs, query, where, serverTimestamp, orderBy } from 'firebase/firestore';
 import { getAppDb } from '../../firebase';
 import { NAMES } from '../../data/names';
 import { trackNameSpin, trackNameSuggest, trackCTAClick, trackNameRate } from '../../lib/analytics';
 
-function getRandomName(exclude?: string): string {
+function getRandomFromList(list: string[], exclude?: string): string {
   let name: string;
   do {
-    name = NAMES[Math.floor(Math.random() * NAMES.length)];
-  } while (name === exclude && NAMES.length > 1);
+    name = list[Math.floor(Math.random() * list.length)];
+  } while (name === exclude && list.length > 1);
   return name;
 }
 
@@ -23,9 +23,26 @@ interface Star {
 }
 
 export function NameGeneratorPage() {
+  const [namesList, setNamesList] = useState<string[]>(NAMES);
+
+  useEffect(() => {
+    const db = getAppDb();
+    getDocs(query(collection(db, 'names'), orderBy('name', 'asc')))
+      .then((snap) => {
+        if (!snap.empty) {
+          setNamesList(snap.docs.map((d) => d.data().name as string));
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const getRandomName = useCallback((exclude?: string) => {
+    return getRandomFromList(namesList, exclude);
+  }, [namesList]);
+
   const [displayName, setDisplayName] = useState(() => {
     const params = new URLSearchParams(window.location.search);
-    return params.get('n') || getRandomName();
+    return params.get('n') || getRandomFromList(NAMES);
   });
   const [isSpinning, setIsSpinning] = useState(false);
   const [isRevealed, setIsRevealed] = useState(true);
@@ -127,7 +144,7 @@ export function NameGeneratorPage() {
     };
 
     intervalRef.current = setTimeout(tick, speed);
-  }, [isSpinning]);
+  }, [isSpinning, getRandomName]);
 
   useEffect(() => {
     return () => {
