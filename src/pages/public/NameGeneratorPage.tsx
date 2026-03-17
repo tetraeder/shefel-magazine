@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, getDocs, query, where, serverTimestamp } from 'firebase/firestore';
 import { getAppDb } from '../../firebase';
 import { NAMES } from '../../data/names';
 import { trackNameSpin, trackNameSuggest, trackCTAClick, trackNameRate } from '../../lib/analytics';
@@ -76,12 +76,6 @@ export function NameGeneratorPage() {
       setStars(makeStars(100, 40, 180));
       setTimeout(() => setStars([]), 2500);
     }
-    // Show fake average including this rating
-    const fakeCount = 3 + Math.floor(Math.random() * 15);
-    const fakeTotal = fakeCount * (2.5 + Math.random() * 2);
-    const totalWithCurrent = fakeTotal + value;
-    const countWithCurrent = fakeCount + 1;
-    setAvgRating({ avg: totalWithCurrent / countWithCurrent, count: countWithCurrent });
     try {
       const db = getAppDb();
       await addDoc(collection(db, 'nameRatings'), {
@@ -89,6 +83,12 @@ export function NameGeneratorPage() {
         rating: value,
         createdAt: serverTimestamp(),
       });
+      const snap = await getDocs(query(collection(db, 'nameRatings'), where('name', '==', displayName)));
+      if (!snap.empty) {
+        let total = 0;
+        snap.forEach((d) => { total += d.data().rating; });
+        setAvgRating({ avg: total / snap.size, count: snap.size });
+      }
     } catch {
       // silent fail — analytics still tracks it
     }
