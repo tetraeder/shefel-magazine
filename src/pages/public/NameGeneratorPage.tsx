@@ -309,7 +309,7 @@ export function NameGeneratorPage() {
             </div>
             {avgRating && (
               <span
-                className="absolute top-full mt-1 font-body text-shefel-red/70 text-sm whitespace-nowrap"
+                className="absolute top-full mt-1 font-body text-shefel-red/70 text-lg whitespace-nowrap"
                 style={{ animation: 'avgSlideIn 0.5s ease-out 0.3s both' }}
               >
                 {avgRating.avg.toFixed(1)} ממוצע ({avgRating.count} דירוגים)

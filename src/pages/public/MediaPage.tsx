@@ -15,6 +15,7 @@ export function MediaPage() {
   const highlightId = searchParams.get('v');
   const [activeTag, setActiveTag] = useState<string | null>(null);
   const [sort, setSort] = useState<SortOrder>('newest');
+  const [searchQuery, setSearchQuery] = useState('');
   const scrolledRef = useRef(false);
 
   useEffect(() => {
@@ -35,9 +36,11 @@ export function MediaPage() {
   const usedTagIds = new Set(media.flatMap((m) => m.tags));
   const mediaTags = tags.filter((t) => usedTagIds.has(t.id));
 
-  const filtered = activeTag
-    ? media.filter((m) => m.tags.includes(activeTag))
-    : media;
+  const filtered = media.filter((m) => {
+    if (activeTag && !m.tags.includes(activeTag)) return false;
+    if (searchQuery && !m.title.includes(searchQuery)) return false;
+    return true;
+  });
 
   const sorted = useMemo(() => {
     return [...filtered].sort((a, b) => {
@@ -104,12 +107,19 @@ export function MediaPage() {
         >
           ישן ← חדש
         </button>
+        <span className="text-shefel-red/30 mx-1">|</span>
+        <input
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="חיפוש..."
+          className="w-40 border-2 border-shefel-red/30 rounded-full px-4 py-1.5 text-base font-body text-shefel-red placeholder:text-shefel-red/50 focus:outline-none focus:border-shefel-red bg-shefel-yellow"
+        />
       </div>
 
       {sorted.length === 0 ? (
-        <p className="text-center text-gray-500 font-body">אין תוכן מדיה עדיין</p>
+        <p className="text-center text-shefel-red font-body">אין תוכן מדיה עדיין</p>
       ) : (
-        <div key={`${activeTag}-${sort}`} className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 grid-animate">
+        <div key={`${activeTag}-${sort}-${searchQuery}`} className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 grid-animate">
           {sorted.map((item, index) => (
             <div key={item.id} id={`media-${item.id}`} className={highlightId === item.id ? 'pb-2 pr-2' : ''}>
               <MediaCard item={item} tagsMap={tagsMap} autoPlay={highlightId === item.id || (!highlightId && index === 0)} />

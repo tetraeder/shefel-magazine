@@ -72,6 +72,12 @@ export function Header() {
               {link.label}
             </Link>
           ))}
+          <Link
+            to="/tag/שפל-בדרכים"
+            className="font-body font-bold text-xl whitespace-nowrap text-shefel-red hover:text-shefel-black transition-colors no-underline"
+          >
+            שפל בדרכים
+          </Link>
           <div className="flex-1" />
           <SocialLinks
             showLabels
@@ -101,9 +107,17 @@ export function Header() {
             </Link>
           ))}
           <Link
-            to="/contact#join"
+            to="/tag/שפל-בדרכים"
             className="menu-link bg-shefel-yellow text-shefel-red font-display font-bold text-2xl px-8 py-3 rounded-lg no-underline mt-4"
             style={{ animationDelay: `${navLinks.length * 50}ms` }}
+            onClick={() => setMenuOpen(false)}
+          >
+            שפל בדרכים
+          </Link>
+          <Link
+            to="/contact#join"
+            className="menu-link bg-shefel-yellow text-shefel-red font-display font-bold text-2xl px-8 py-3 rounded-lg no-underline"
+            style={{ animationDelay: `${(navLinks.length + 1) * 50}ms` }}
             onClick={() => setMenuOpen(false)}
           >
             להצטרפות
