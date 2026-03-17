@@ -111,25 +111,30 @@ export function NameGeneratorPage() {
       setStars(makeStars(100, 40, 180));
       setTimeout(() => setStars([]), 2500);
     }
-    try {
-      const db = getAppDb();
-      await addDoc(collection(db, 'nameRatings'), {
-        name: displayName,
-        rating: value,
-        createdAt: serverTimestamp(),
-      });
-      const snap = await getDocs(query(collection(db, 'nameRatings'), where('name', '==', displayName)));
-      if (!snap.empty) {
-        let total = 0;
-        snap.forEach((d) => { total += d.data().rating; });
-        setAvgRating({ avg: total / snap.size, count: snap.size });
-      }
-    } catch {
-      // silent fail — analytics still tracks it
-    }
+    // Show optimistic average immediately
+    setAvgRating({ avg: value, count: 1 });
     setTimeout(() => {
       spinRef.current?.();
     }, 2000);
+    // Write to Firestore and update with real average in background
+    try {
+      const db = getAppDb();
+      addDoc(collection(db, 'nameRatings'), {
+        name: displayName,
+        rating: value,
+        createdAt: serverTimestamp(),
+      }).then(() =>
+        getDocs(query(collection(db, 'nameRatings'), where('name', '==', displayName)))
+      ).then((snap) => {
+        if (!snap.empty) {
+          let total = 0;
+          snap.forEach((d) => { total += d.data().rating; });
+          setAvgRating({ avg: total / snap.size, count: snap.size });
+        }
+      });
+    } catch {
+      // silent fail
+    }
   }
 
   function spin() {
