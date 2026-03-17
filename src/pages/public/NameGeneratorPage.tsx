@@ -58,6 +58,7 @@ export function NameGeneratorPage() {
   const [hoverRating, setHoverRating] = useState(0);
   const [ratingLocked, setRatingLocked] = useState(false);
   const [avgRating, setAvgRating] = useState<{ avg: number; count: number } | null>(null);
+  const [ratingKey, setRatingKey] = useState(0);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const spinRef = useRef<(() => void) | null>(null);
   const starIdRef = useRef(0);
@@ -138,6 +139,7 @@ export function NameGeneratorPage() {
     setRatingLocked(false);
     setHoverRating(0);
     setAvgRating(null);
+    setRatingKey((k) => k + 1);
 
     let speed = 50;
     let elapsed = 0;
@@ -275,7 +277,7 @@ export function NameGeneratorPage() {
             ))}
           </div>
         ) : isRevealed ? (
-          <div className="flex flex-col items-center">
+          <div key={ratingKey} className="flex flex-col items-center">
             <div className="flex gap-2" dir="ltr">
               {[1, 2, 3, 4, 5].map((value, i) => {
                 const displayValue = avgRating ? avgRating.avg : (hoverRating || rating);
