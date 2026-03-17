@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { collection, addDoc, getDocs, query, where, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { getAppDb } from '../../firebase';
 import { NAMES } from '../../data/names';
 import { trackNameSpin, trackNameSuggest, trackCTAClick, trackNameRate } from '../../lib/analytics';
@@ -76,6 +76,12 @@ export function NameGeneratorPage() {
       setStars(makeStars(100, 40, 180));
       setTimeout(() => setStars([]), 2500);
     }
+    // Show fake average including this rating
+    const fakeCount = 3 + Math.floor(Math.random() * 15);
+    const fakeTotal = fakeCount * (2.5 + Math.random() * 2);
+    const totalWithCurrent = fakeTotal + value;
+    const countWithCurrent = fakeCount + 1;
+    setAvgRating({ avg: totalWithCurrent / countWithCurrent, count: countWithCurrent });
     try {
       const db = getAppDb();
       await addDoc(collection(db, 'nameRatings'), {
@@ -83,12 +89,6 @@ export function NameGeneratorPage() {
         rating: value,
         createdAt: serverTimestamp(),
       });
-      const snap = await getDocs(query(collection(db, 'nameRatings'), where('name', '==', displayName)));
-      if (!snap.empty) {
-        let total = 0;
-        snap.forEach((d) => { total += d.data().rating; });
-        setAvgRating({ avg: total / snap.size, count: snap.size });
-      }
     } catch {
       // silent fail — analytics still tracks it
     }
@@ -218,7 +218,7 @@ export function NameGeneratorPage() {
       </div>
 
       {/* Star rating — always takes space to prevent layout jump */}
-      <div className="relative flex items-center justify-center h-12 transition-all duration-500">
+      <div className="relative flex items-center justify-center h-20 mb-4 transition-all duration-500">
         {isSpinning ? (
           <div className="flex gap-2" dir="ltr">
             {[0, 1, 2, 3, 4].map((i) => (
@@ -237,49 +237,48 @@ export function NameGeneratorPage() {
             ))}
           </div>
         ) : isRevealed ? (
-          <div className="flex gap-2" dir="ltr">
-            {[1, 2, 3, 4, 5].map((value, i) => {
-              const active = value <= (hoverRating || rating);
-              return (
-                <button
-                  key={value}
-                  onClick={() => handleRate(value)}
-                  onMouseEnter={() => !ratingLocked && setHoverRating(value)}
-                  onMouseLeave={() => !ratingLocked && setHoverRating(0)}
-                  className="text-3xl md:text-4xl cursor-pointer select-none"
-                  style={{
-                    animation: `starBounceIn 0.4s ease-out ${i * 0.08}s both`,
-                    transform: active ? 'scale(1.2)' : 'scale(1)',
-                    filter: active
-                      ? 'drop-shadow(0 0 6px rgba(255,194,0,0.8)) drop-shadow(0 0 2px rgba(204,0,0,0.5))'
-                      : 'drop-shadow(0 1px 2px rgba(204,0,0,0.3))',
-                    transition: 'transform 0.2s, filter 0.2s',
-                    WebkitTextStroke: active ? '0' : '2px #CC0000',
-                    color: active ? '' : 'transparent',
-                  }}
-                >
-                  {active ? '⭐' : '☆'}
-                </button>
-              );
-            })}
+          <div className="flex flex-col items-center">
+            <div className="flex gap-2" dir="ltr">
+              {[1, 2, 3, 4, 5].map((value, i) => {
+                const displayValue = avgRating ? avgRating.avg : (hoverRating || rating);
+                const full = value <= Math.floor(displayValue);
+                const partial = !full && value === Math.ceil(displayValue) && displayValue % 1 >= 0.25;
+                const active = full || partial || value <= (hoverRating || rating);
+                return (
+                  <button
+                    key={value}
+                    onClick={() => handleRate(value)}
+                    onMouseEnter={() => !ratingLocked && setHoverRating(value)}
+                    onMouseLeave={() => !ratingLocked && setHoverRating(0)}
+                    className="text-3xl md:text-4xl cursor-pointer select-none relative"
+                    style={{
+                      animation: avgRating
+                        ? `avgStarPulse 0.4s ease-out ${i * 0.08}s both`
+                        : `starBounceIn 0.4s ease-out ${i * 0.08}s both`,
+                      transform: active ? 'scale(1.2)' : 'scale(1)',
+                      filter: active
+                        ? 'drop-shadow(0 0 6px rgba(255,194,0,0.8)) drop-shadow(0 0 2px rgba(204,0,0,0.5))'
+                        : 'drop-shadow(0 1px 2px rgba(204,0,0,0.3))',
+                      transition: 'transform 0.3s, filter 0.3s',
+                      WebkitTextStroke: active ? '0' : '2px #CC0000',
+                      color: active ? '' : 'transparent',
+                    }}
+                  >
+                    {active ? '⭐' : '☆'}
+                  </button>
+                );
+              })}
+            </div>
+            {avgRating && (
+              <span
+                className="absolute top-full mt-1 font-body text-shefel-red/70 text-sm whitespace-nowrap"
+                style={{ animation: 'avgSlideIn 0.5s ease-out 0.3s both' }}
+              >
+                {avgRating.avg.toFixed(1)} ממוצע ({avgRating.count} דירוגים)
+              </span>
+            )}
           </div>
         ) : null}
-      </div>
-
-      {/* Average rating display */}
-      <div className="h-8 flex items-center justify-center">
-        {avgRating && (
-          <div
-            className="flex items-center gap-2 font-body text-shefel-red/80 text-base"
-            style={{ animation: 'avgSlideIn 0.6s ease-out' }}
-          >
-            <span>ממוצע דירוגים:</span>
-            <span className="font-bold text-lg" style={{ animation: 'avgCountUp 0.8s ease-out' }}>
-              {avgRating.avg.toFixed(1)} ⭐
-            </span>
-            <span className="text-shefel-red/50">({avgRating.count} דירוגים)</span>
-          </div>
-        )}
       </div>
 
       <button
@@ -428,13 +427,13 @@ export function NameGeneratorPage() {
           animation: popFloat 2.2s ease-out forwards;
         }
         @keyframes avgSlideIn {
-          0% { opacity: 0; transform: translateY(10px); }
+          0% { opacity: 0; transform: translateY(6px); }
           100% { opacity: 1; transform: translateY(0); }
         }
-        @keyframes avgCountUp {
-          0% { opacity: 0; transform: scale(0.5); }
-          50% { transform: scale(1.2); }
-          100% { opacity: 1; transform: scale(1); }
+        @keyframes avgStarPulse {
+          0% { transform: scale(1); }
+          40% { transform: scale(1.4); }
+          100% { transform: scale(1.2); }
         }
         @keyframes starLoading {
           0%, 100% {
