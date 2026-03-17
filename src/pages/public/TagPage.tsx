@@ -300,7 +300,7 @@ export function TagPage() {
           {/* Mobile view: sticky player + playlist */}
           <div className="lg:hidden mb-8">
             {activeVideo && (
-              <div className="sticky top-0 z-20 bg-shefel-yellow pb-2 pt-1 px-3">
+              <div className="sticky top-0 z-20 bg-shefel-yellow pb-2 pt-1 -mx-4 px-4">
                 <div className="relative aspect-[9/16] max-h-[50vh] mx-auto bg-shefel-black rounded-lg overflow-hidden">
                   {activeVideo.mediaOriginUrl?.includes('mediadelivery.net') ? (
                     <iframe
