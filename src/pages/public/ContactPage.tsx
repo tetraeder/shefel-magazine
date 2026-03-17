@@ -122,9 +122,12 @@ export function ContactPage() {
 
       {/* Updates Form */}
       <div id="join" className="bg-shefel-yellow rounded-lg border-4 border-shefel-red p-8 mt-8">
-        <h2 className="font-display font-bold text-shefel-red text-3xl text-center mb-6">
+        <h2 className="font-display font-bold text-shefel-red text-3xl text-center mb-2">
           השאירו פרטים לעדכונים
         </h2>
+        <p className="font-body text-shefel-red text-xl text-center mb-6">
+          פופ-אפים של השפל שופ, הרצאות, אירועי תרבות כדורגל ועוד הפתעות
+        </p>
 
         {updateStatus === 'sent' ? (
           <div className="text-center py-8">
