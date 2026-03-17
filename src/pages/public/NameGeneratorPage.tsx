@@ -301,7 +301,7 @@ export function NameGeneratorPage() {
                     style={{
                       animation: avgRating
                         ? `avgStarPulse 0.4s ease-out ${i * 0.08}s both`
-                        : `starBounceIn 0.4s ease-out ${i * 0.08}s both`,
+                        : undefined,
                       transform: active ? 'scale(1.2)' : 'scale(1)',
                       filter: active
                         ? 'drop-shadow(0 0 6px rgba(255,194,0,0.8)) drop-shadow(0 0 2px rgba(204,0,0,0.5))'
