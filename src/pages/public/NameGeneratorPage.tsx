@@ -60,6 +60,7 @@ export function NameGeneratorPage() {
   const [ratingLocked, setRatingLocked] = useState(false);
   const [avgRating, setAvgRating] = useState<{ avg: number; count: number } | null>(null);
   const [ratingKey, setRatingKey] = useState(0);
+  const ratedNameRef = useRef<string | null>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const spinRef = useRef<(() => void) | null>(null);
   const starIdRef = useRef(0);
@@ -118,6 +119,7 @@ export function NameGeneratorPage() {
     }, 2000);
     // Write to Firestore and update with real average in background
     const ratedName = displayName;
+    ratedNameRef.current = ratedName;
     try {
       const db = getAppDb();
       addDoc(collection(db, 'nameRatings'), {
@@ -127,7 +129,8 @@ export function NameGeneratorPage() {
       }).then(() =>
         getDocs(query(collection(db, 'nameRatings'), where('name', '==', ratedName)))
       ).then((snap) => {
-        if (!snap.empty && !isSpinningRef.current) {
+        // Only update if we're still showing the same name
+        if (!snap.empty && ratedNameRef.current === ratedName) {
           let total = 0;
           snap.forEach((d) => { total += d.data().rating; });
           setAvgRating({ avg: total / snap.size, count: snap.size });
@@ -148,6 +151,7 @@ export function NameGeneratorPage() {
     setHoverRating(0);
     setAvgRating(null);
     setRatingKey((k) => k + 1);
+    ratedNameRef.current = null;
 
     let speed = 50;
     let elapsed = 0;
