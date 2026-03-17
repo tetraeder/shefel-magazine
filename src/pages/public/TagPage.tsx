@@ -200,6 +200,10 @@ export function TagPage() {
     }
   }, [tagMedia, activeVideoId]);
 
+  const filteredMedia = searchQuery
+    ? tagMedia.filter((m) => m.title.includes(searchQuery))
+    : tagMedia;
+
   const activeVideo = tagMedia.find((m) => m.id === activeVideoId) ?? tagMedia[0];
 
   if (loading || postsLoading || mediaLoading) return <Spinner />;
@@ -274,6 +278,13 @@ export function TagPage() {
           >
             ישן ← חדש
           </button>
+          <span className="text-shefel-red/30 mx-1">|</span>
+          <input
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="חיפוש..."
+            className="w-40 border-2 border-shefel-red/30 rounded-full px-4 py-1.5 text-base font-body text-shefel-red placeholder:text-shefel-red/50 focus:outline-none focus:border-shefel-red bg-shefel-yellow"
+          />
         </div>
       )}
 
@@ -328,7 +339,7 @@ export function TagPage() {
             )}
             {/* Scrollable playlist */}
             <div className="px-4 pt-3 space-y-2">
-              {tagMedia.map((item, i) => (
+              {filteredMedia.map((item, i) => (
                 <button
                   key={item.id}
                   onClick={() => {
