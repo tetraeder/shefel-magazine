@@ -7,7 +7,6 @@ import { usePostsByTag } from '../../hooks/usePosts';
 import { useTags } from '../../hooks/useTags';
 import { useMedia } from '../../hooks/useMedia';
 import { PostCard } from '../../components/magazine/PostCard';
-import { MediaCard } from '../../components/magazine/MediaCard';
 import { ShareButton } from '../../components/magazine/ShareButton';
 import { TagChip } from '../../components/magazine/TagChip';
 import { Spinner } from '../../components/ui/Spinner';
@@ -89,7 +88,7 @@ function PlaylistSidebar({
     : items;
 
   return (
-    <div className="flex flex-col gap-3 overflow-y-auto max-h-[70vh] lg:max-h-[calc(70vh+4rem)]">
+    <div className="flex flex-col gap-3 overflow-y-auto max-h-[70vh] lg:max-h-[calc(70vh+4rem)] pl-3" style={{ scrollbarWidth: 'thin', scrollbarColor: 'var(--color-shefel-red) transparent' }}>
       <p className="font-display font-bold text-shefel-red text-lg sticky top-0 bg-shefel-yellow py-2 z-10">
         הבא בתור ({filtered.length})
       </p>
@@ -103,6 +102,7 @@ function PlaylistSidebar({
           />
         </div>
       )}
+      <div key={searchQuery} className="flex flex-col gap-3 grid-animate">
       {filtered.map((item, i) => (
         <button
           key={item.id}
@@ -129,6 +129,7 @@ function PlaylistSidebar({
           </span>
         </button>
       ))}
+      </div>
       {filtered.length === 0 && searchQuery && (
         <p className="text-center text-shefel-red/60 font-body text-base py-4">
           לא נמצאו תוצאות
@@ -201,8 +202,6 @@ export function TagPage() {
 
   const activeVideo = tagMedia.find((m) => m.id === activeVideoId) ?? tagMedia[0];
 
-  const mobileVideoRefs = useRef<Map<string, HTMLDivElement>>(new Map());
-
   if (loading || postsLoading || mediaLoading) return <Spinner />;
 
   if (!tag) {
@@ -225,12 +224,21 @@ export function TagPage() {
         <h1 className="font-display font-black text-shefel-red text-4xl">
           {tag.name}
         </h1>
-        <Link
-          to={from}
-          className="inline-block font-body font-bold text-shefel-red text-lg hover:text-shefel-black transition-colors no-underline mt-2"
-        >
-          {backLabel}
-        </Link>
+        <div className="flex justify-center gap-4 mt-2">
+          <Link
+            to={from}
+            className="font-body font-bold text-shefel-red text-lg hover:text-shefel-black transition-colors no-underline"
+          >
+            {backLabel}
+          </Link>
+          <Link
+            to="/tag/המקומון"
+            state={{ from }}
+            className="font-body font-bold text-shefel-red text-lg hover:text-shefel-black transition-colors no-underline"
+          >
+            ← המקומון
+          </Link>
+        </div>
       </div>
 
       {(hasMedia || hasPosts) && (tagMedia.length + sortedPosts.length) > 1 && (
@@ -278,19 +286,72 @@ export function TagPage() {
             </div>
           </div>
 
-          {/* Mobile view: vertical scroll of videos */}
-          <div className="lg:hidden max-w-md mx-auto px-4 mb-8 space-y-6">
-            {tagMedia.map((item) => (
-              <div
-                key={item.id}
-                ref={(el) => {
-                  if (el) mobileVideoRefs.current.set(item.id, el);
-                  else mobileVideoRefs.current.delete(item.id);
-                }}
-              >
-                <MediaCard item={item} tagsMap={tagsMap} />
+          {/* Mobile view: sticky mini-player + playlist */}
+          <div className="lg:hidden mb-8">
+            {/* Sticky mini-player */}
+            {activeVideo && (
+              <div className="sticky top-14 z-20 bg-shefel-yellow/95 backdrop-blur-sm pb-2 pt-2 px-3 shadow-lg rounded-b-xl">
+                <div className="relative aspect-[9/16] max-h-[55vh] mx-auto bg-shefel-black rounded-lg overflow-hidden shadow-[4px_4px_0px_theme(--color-shefel-red)]">
+                  {activeVideo.mediaOriginUrl?.includes('mediadelivery.net') ? (
+                    <iframe
+                      key={activeVideo.id}
+                      src={activeVideo.mediaOriginUrl.replace('/play/', '/embed/') + '?autoplay=true'}
+                      className="w-full h-full"
+                      allow="autoplay; fullscreen; picture-in-picture"
+                      allowFullScreen
+                    />
+                  ) : (
+                    <video
+                      key={activeVideo.id}
+                      src={activeVideo.mediaOriginUrl}
+                      autoPlay
+                      controls
+                      playsInline
+                      className="w-full h-full object-contain"
+                    />
+                  )}
+                </div>
+                <p className="font-display font-bold text-shefel-black text-base text-center mt-1 truncate">
+                  {activeVideo.title}
+                </p>
               </div>
-            ))}
+            )}
+            {/* Scrollable playlist */}
+            <div className="px-4 pt-3 space-y-2">
+              {tagMedia.map((item, i) => (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    setActiveVideoId(item.id);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  className={`flex gap-3 items-center w-full text-right rounded-lg p-3 transition-colors ${
+                    item.id === activeVideo?.id
+                      ? 'bg-shefel-red/10 border-2 border-shefel-red'
+                      : 'border-2 border-transparent hover:bg-shefel-red/5'
+                  }`}
+                >
+                  <div className="relative w-24 h-36 shrink-0 rounded-lg overflow-hidden bg-shefel-black">
+                    {item.thumbnailUrl ? (
+                      <img src={item.thumbnailUrl} alt="" className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-shefel-white">▶</div>
+                    )}
+                    <span className="absolute top-1 right-1 bg-shefel-black/70 text-shefel-white text-xs font-bold px-1.5 rounded">
+                      {i + 1}
+                    </span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <span className="font-body font-bold text-base text-shefel-black line-clamp-2 block">
+                      {item.title}
+                    </span>
+                    {item.credits && (
+                      <span className="text-shefel-red text-sm">קרדיט: {item.credits}</span>
+                    )}
+                  </div>
+                </button>
+              ))}
+            </div>
           </div>
         </>
       )}
