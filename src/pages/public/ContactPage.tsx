@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { getAppDb } from '../../firebase';
 import { isMockMode } from '../../lib/mockData';
@@ -11,6 +12,16 @@ export function ContactPage() {
 
   const [updateForm, setUpdateForm] = useState({ name: '', email: '', phone: '', region: '', notes: '' });
   const [updateStatus, setUpdateStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.hash) {
+      const el = document.getElementById(location.hash.slice(1));
+      if (el) {
+        setTimeout(() => el.scrollIntoView({ behavior: 'smooth' }), 100);
+      }
+    }
+  }, [location.hash]);
 
   const handleUpdateSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -110,7 +121,7 @@ export function ContactPage() {
       </div>
 
       {/* Updates Form */}
-      <div className="bg-shefel-yellow rounded-lg border-4 border-shefel-red p-8 mt-8">
+      <div id="join" className="bg-shefel-yellow rounded-lg border-4 border-shefel-red p-8 mt-8">
         <h2 className="font-display font-bold text-shefel-red text-3xl text-center mb-6">
           השאירו פרטים לעדכונים
         </h2>

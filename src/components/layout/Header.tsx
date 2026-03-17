@@ -58,7 +58,7 @@ export function Header() {
             <img
               src="/logo-shefel.jpg"
               alt="כדורגל שפל"
-              className="h-10 rounded-lg mix-blend-multiply"
+              className="h-14 rounded-lg"
             />
           </Link>
           {navLinks.map((link) => (
@@ -100,16 +100,14 @@ export function Header() {
               {link.label}
             </Link>
           ))}
-          <a
-            href="https://docs.google.com/forms/d/e/1FAIpQLSdaVclAPwJ641OeXIO23DT3GZ9vALegcOyDy78FQR1gozkGiQ/viewform?usp=dialog"
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            to="/contact#join"
             className="menu-link bg-shefel-yellow text-shefel-red font-display font-bold text-2xl px-8 py-3 rounded-lg no-underline mt-4"
             style={{ animationDelay: `${navLinks.length * 50}ms` }}
             onClick={() => setMenuOpen(false)}
           >
             להצטרפות
-          </a>
+          </Link>
         </div>
       )}
     </header>

@@ -115,7 +115,7 @@ export function NameGeneratorPage() {
         className={`font-display font-black text-2xl md:text-3xl px-10 py-4 rounded-xl border-4 transition-all duration-200 cursor-pointer ${
           isSpinning
             ? 'bg-shefel-red/60 text-shefel-yellow/60 border-shefel-red/40 cursor-not-allowed scale-95'
-            : 'bg-shefel-red text-shefel-yellow border-shefel-red hover:bg-shefel-black hover:border-shefel-black hover:scale-105 active:scale-95'
+            : 'bg-shefel-red text-shefel-yellow border-shefel-red hover:bg-shefel-yellow hover:text-shefel-red hover:border-shefel-red hover:scale-105 active:scale-95'
         }`}
       >
         {isSpinning ? 'מגריל...' : 'תן לי שם מפעם!'}
