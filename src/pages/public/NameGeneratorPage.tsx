@@ -2,6 +2,7 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import { collection, addDoc, getDocs, query, where, serverTimestamp, orderBy } from 'firebase/firestore';
 import { getAppDb } from '../../firebase';
 import { NAMES } from '../../data/names';
+import { createSuggestion } from '../../services/names';
 import { trackNameSpin, trackNameSuggest, trackCTAClick, trackNameRate } from '../../lib/analytics';
 
 function getRandomFromList(list: string[], exclude?: string): string {
@@ -363,7 +364,7 @@ export function NameGeneratorPage() {
               <button
                 onClick={() => {
                   trackNameSuggest(firstName, lastName);
-                  // TODO: handle submission (e.g. save to Firestore)
+                  createSuggestion(firstName.trim(), lastName.trim()).catch(() => {});
                   setShowSuggest(false);
                   setFirstName('');
                   setLastName('');

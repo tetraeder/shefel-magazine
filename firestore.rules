@@ -23,6 +23,11 @@ service cloud.firestore {
       allow read: if true;
       allow write: if request.auth != null;
     }
+    // Name suggestions - anyone can create, admin can read/delete
+    match /nameSuggestions/{docId} {
+      allow create: if true;
+      allow read, delete: if request.auth != null;
+    }
     // Name ratings - anyone can create and read
     match /nameRatings/{docId} {
       allow create, read: if true;

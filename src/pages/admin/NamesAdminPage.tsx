@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNames } from '../../hooks/useNames';
-import { createName, updateName, deleteName, seedNames } from '../../services/names';
+import { createName, updateName, deleteName, seedNames, getAllSuggestions, deleteSuggestion } from '../../services/names';
+import type { NameSuggestion } from '../../services/names';
 import { NAMES } from '../../data/names';
 import { Spinner } from '../../components/ui/Spinner';
 
@@ -13,6 +14,20 @@ export function NamesAdminPage() {
   const [saving, setSaving] = useState(false);
   const [seeding, setSeeding] = useState(false);
   const [search, setSearch] = useState('');
+  const [suggestions, setSuggestions] = useState<NameSuggestion[]>([]);
+  const [suggestionsLoading, setSuggestionsLoading] = useState(true);
+
+  const fetchSuggestions = useCallback(() => {
+    setSuggestionsLoading(true);
+    getAllSuggestions()
+      .then(setSuggestions)
+      .catch(() => {})
+      .finally(() => setSuggestionsLoading(false));
+  }, []);
+
+  useEffect(() => {
+    fetchSuggestions();
+  }, [fetchSuggestions]);
 
   async function handleAdd() {
     if (!newName.trim()) return;
@@ -56,6 +71,19 @@ export function NamesAdminPage() {
     }
   }
 
+  async function handleApproveSuggestion(suggestion: NameSuggestion) {
+    const fullName = [suggestion.firstName, suggestion.lastName].filter(Boolean).join(' ');
+    await createName(fullName);
+    await deleteSuggestion(suggestion.id);
+    refetch();
+    fetchSuggestions();
+  }
+
+  async function handleIgnoreSuggestion(id: string) {
+    await deleteSuggestion(id);
+    fetchSuggestions();
+  }
+
   const filtered = search
     ? names.filter((n) => n.name.includes(search))
     : names;
@@ -64,6 +92,48 @@ export function NamesAdminPage() {
 
   return (
     <div>
+      {/* Suggestions section */}
+      {!suggestionsLoading && suggestions.length > 0 && (
+        <div className="mb-8">
+          <h2 className="font-display font-black text-shefel-black text-2xl mb-4">
+            הצעות ({suggestions.length})
+          </h2>
+          <div className="bg-shefel-white rounded-lg border-2 border-shefel-red overflow-hidden">
+            <table className="w-full text-sm">
+              <thead className="bg-shefel-red text-shefel-white">
+                <tr>
+                  <th className="px-4 py-3 text-right font-bold">שם פרטי</th>
+                  <th className="px-4 py-3 text-right font-bold">שם משפחה</th>
+                  <th className="px-4 py-3 text-right font-bold w-48">פעולות</th>
+                </tr>
+              </thead>
+              <tbody>
+                {suggestions.map((s) => (
+                  <tr key={s.id} className="border-b border-gray-200 hover:bg-gray-50">
+                    <td className="px-4 py-2 font-bold">{s.firstName}</td>
+                    <td className="px-4 py-2 font-bold">{s.lastName}</td>
+                    <td className="px-4 py-2 flex gap-2">
+                      <button
+                        onClick={() => handleApproveSuggestion(s)}
+                        className="bg-green-600 text-white font-bold px-3 py-1 rounded text-xs hover:bg-green-700 transition-colors"
+                      >
+                        הוסף לרשימה
+                      </button>
+                      <button
+                        onClick={() => handleIgnoreSuggestion(s.id)}
+                        className="bg-gray-400 text-white font-bold px-3 py-1 rounded text-xs hover:bg-gray-500 transition-colors"
+                      >
+                        התעלם
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
       <div className="flex items-center justify-between mb-6">
         <h1 className="font-display font-black text-shefel-black text-3xl">
           שמות מפעמים ({names.length})

@@ -5,10 +5,9 @@ import {
   updateDoc,
   deleteDoc,
   doc,
-  query,
-  orderBy,
   Timestamp,
   writeBatch,
+  serverTimestamp,
 } from 'firebase/firestore';
 import { getAppDb } from '../firebase';
 
@@ -41,6 +40,41 @@ export async function updateName(id: string, name: string): Promise<void> {
 
 export async function deleteName(id: string): Promise<void> {
   await deleteDoc(doc(getAppDb(), COLLECTION, id));
+}
+
+// --- Name Suggestions ---
+
+const SUGGESTIONS_COLLECTION = 'nameSuggestions';
+
+export interface NameSuggestion {
+  id: string;
+  firstName: string;
+  lastName: string;
+  createdAt: Timestamp;
+}
+
+export async function getAllSuggestions(): Promise<NameSuggestion[]> {
+  const snapshot = await getDocs(collection(getAppDb(), SUGGESTIONS_COLLECTION));
+  const suggestions = snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as NameSuggestion));
+  suggestions.sort((a, b) => {
+    const aTime = a.createdAt?.toMillis?.() ?? 0;
+    const bTime = b.createdAt?.toMillis?.() ?? 0;
+    return bTime - aTime;
+  });
+  return suggestions;
+}
+
+export async function createSuggestion(firstName: string, lastName: string): Promise<string> {
+  const docRef = await addDoc(collection(getAppDb(), SUGGESTIONS_COLLECTION), {
+    firstName,
+    lastName,
+    createdAt: serverTimestamp(),
+  });
+  return docRef.id;
+}
+
+export async function deleteSuggestion(id: string): Promise<void> {
+  await deleteDoc(doc(getAppDb(), SUGGESTIONS_COLLECTION, id));
 }
 
 export async function seedNames(names: string[]): Promise<void> {
