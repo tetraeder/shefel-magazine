@@ -18,7 +18,7 @@ export function MediaCard({ item, tagsMap, autoPlay = false }: MediaCardProps) {
     .filter(Boolean);
 
   return (
-    <div className="group">
+    <div className="group flex flex-col h-full">
       <div
         className="relative aspect-[9/16] bg-shefel-black rounded-lg overflow-hidden shadow-[8px_8px_0px_theme(--color-shefel-red)] cursor-pointer"
         onClick={() => !playing && setPlaying(true)}
@@ -62,22 +62,18 @@ export function MediaCard({ item, tagsMap, autoPlay = false }: MediaCardProps) {
       </div>
       <div className="flex items-center justify-center gap-2 mt-3">
         <ShareButton url={`${window.location.origin}/media?v=${item.id}`} title={item.title} />
-        <p className="font-display font-bold text-shefel-black text-lg">
+        <p className="font-display font-bold text-shefel-black text-lg text-center line-clamp-2 min-h-[3.5rem]">
           {item.title}
         </p>
       </div>
-      {item.credits && (
-        <p className="text-center text-shefel-red text-sm mt-1">
-          {item.credits}
-        </p>
-      )}
-      {itemTags.length > 0 && (
-        <div className="flex flex-wrap justify-center gap-2 mt-2">
-          {itemTags.map((tag) => (
-            <TagChip key={tag.id} tag={tag} />
-          ))}
-        </div>
-      )}
+      <p className="text-center text-shefel-red text-sm mt-1 min-h-[1.25rem]">
+        {item.credits ? `קרדיט: ${item.credits}` : '\u00A0'}
+      </p>
+      <div className="flex flex-wrap justify-center gap-2 mt-auto pt-2">
+        {itemTags.map((tag) => (
+          <TagChip key={tag.id} tag={tag} />
+        ))}
+      </div>
     </div>
   );
 }

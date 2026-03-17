@@ -1,27 +1,141 @@
 import { useParams, Link, useLocation } from 'react-router-dom';
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useRef } from 'react';
 import type { Tag } from '../../types/tag';
-import type { Post } from '../../types/post';
 import type { MediaItem } from '../../types/media';
 import { getTagBySlug } from '../../services/tags';
 import { usePostsByTag } from '../../hooks/usePosts';
 import { useTags } from '../../hooks/useTags';
 import { useMedia } from '../../hooks/useMedia';
 import { PostCard } from '../../components/magazine/PostCard';
-import { MediaCarouselCard } from '../../components/magazine/MediaCarouselCard';
+import { MediaCard } from '../../components/magazine/MediaCard';
+import { ShareButton } from '../../components/magazine/ShareButton';
+import { TagChip } from '../../components/magazine/TagChip';
 import { Spinner } from '../../components/ui/Spinner';
 import { isMockMode, MOCK_TAGS } from '../../lib/mockData';
 
 type SortOrder = 'newest' | 'oldest';
-type GridItem =
-  | { type: 'post'; data: Post; time: number }
-  | { type: 'media'; data: MediaItem; time: number };
 
 function getBackLabel(path: string): string {
   if (path === '/' || path === '/media') return '← חזרה למדיה';
   if (path === '/magazine') return '← חזרה למגזין';
   if (path.startsWith('/issue/')) return '← חזרה לגיליון';
   return '← חזרה';
+}
+
+function PlaylistMainVideo({ item, tagsMap }: { item: MediaItem; tagsMap: Record<string, Tag> }) {
+  const isBunny = item.mediaOriginUrl?.includes('mediadelivery.net');
+  const itemTags = item.tags.map((id) => tagsMap[id]).filter(Boolean);
+
+  return (
+    <div className="flex flex-col items-center">
+      <div className="relative aspect-[9/16] max-h-[70vh] w-full bg-shefel-black rounded-lg overflow-hidden shadow-[8px_8px_0px_theme(--color-shefel-red)]">
+        {isBunny ? (
+          <iframe
+            src={item.mediaOriginUrl.replace('/play/', '/embed/') + '?autoplay=true'}
+            className="w-full h-full"
+            allow="autoplay; fullscreen; picture-in-picture"
+            allowFullScreen
+          />
+        ) : (
+          <video
+            key={item.id}
+            src={item.mediaOriginUrl}
+            autoPlay
+            controls
+            playsInline
+            className="w-full h-full object-contain"
+          />
+        )}
+      </div>
+      <div className="flex items-center justify-center gap-2 mt-4">
+        <ShareButton url={`${window.location.origin}/media?v=${item.id}`} title={item.title} />
+        <h2 className="font-display font-bold text-shefel-black text-2xl">
+          {item.title}
+        </h2>
+      </div>
+      {item.credits && (
+        <p className="text-center text-shefel-red text-base mt-1">קרדיט: {item.credits}</p>
+      )}
+      {itemTags.length > 0 && (
+        <div className="flex flex-wrap justify-center gap-2 mt-2">
+          {itemTags.map((t) => <TagChip key={t.id} tag={t} />)}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function PlaylistSidebar({
+  items,
+  activeId,
+  onSelect,
+  searchQuery,
+  onSearchChange,
+}: {
+  items: MediaItem[];
+  activeId: string;
+  onSelect: (item: MediaItem) => void;
+  searchQuery: string;
+  onSearchChange: (q: string) => void;
+}) {
+  const activeRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    activeRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }, [activeId]);
+
+  const filtered = searchQuery
+    ? items.filter((item) => item.title.includes(searchQuery))
+    : items;
+
+  return (
+    <div className="flex flex-col gap-3 overflow-y-auto max-h-[70vh] lg:max-h-[calc(70vh+4rem)]">
+      <p className="font-display font-bold text-shefel-red text-lg sticky top-0 bg-shefel-yellow py-2 z-10">
+        הבא בתור ({filtered.length})
+      </p>
+      {items.length > 3 && (
+        <div className="sticky top-10 bg-shefel-yellow z-10 pb-2">
+          <input
+            value={searchQuery}
+            onChange={(e) => onSearchChange(e.target.value)}
+            placeholder="חיפוש..."
+            className="w-full border-2 border-shefel-red rounded-lg px-3 py-2 text-base font-body text-shefel-red placeholder:text-shefel-red/50 focus:outline-none bg-shefel-yellow"
+          />
+        </div>
+      )}
+      {filtered.map((item, i) => (
+        <button
+          key={item.id}
+          ref={item.id === activeId ? activeRef : null}
+          onClick={() => onSelect(item)}
+          className={`flex gap-3 items-center text-right rounded-lg p-3 transition-colors cursor-pointer ${
+            item.id === activeId
+              ? 'bg-shefel-red/10 border-2 border-shefel-red'
+              : 'hover:bg-shefel-red/5 border-2 border-transparent'
+          }`}
+        >
+          <div className="relative w-20 h-28 shrink-0 rounded-lg overflow-hidden bg-shefel-black">
+            {item.thumbnailUrl ? (
+              <img src={item.thumbnailUrl} alt="" className="w-full h-full object-cover" />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-shefel-white text-lg">▶</div>
+            )}
+            <span className="absolute top-1 right-1 bg-shefel-black/70 text-shefel-white text-sm font-bold px-1.5 rounded">
+              {i + 1}
+            </span>
+          </div>
+          <span className="font-body font-bold text-base text-shefel-black line-clamp-2">
+            {item.title}
+          </span>
+        </button>
+      ))}
+      {filtered.length === 0 && searchQuery && (
+        <p className="text-center text-shefel-red/60 font-body text-base py-4">
+          לא נמצאו תוצאות
+        </p>
+      )}
+    </div>
+  );
 }
 
 export function TagPage() {
@@ -32,6 +146,8 @@ export function TagPage() {
   const [tag, setTag] = useState<Tag | null>(null);
   const [loading, setLoading] = useState(true);
   const [sort, setSort] = useState<SortOrder>('newest');
+  const [activeVideoId, setActiveVideoId] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     if (!slug) return;
@@ -56,31 +172,52 @@ export function TagPage() {
     return map;
   }, [tags]);
 
-  const allItems: GridItem[] = useMemo(() => {
-    const items: GridItem[] = [];
-    for (const p of posts) {
-      items.push({ type: 'post', data: p, time: p.publishedAt?.toMillis() ?? p.createdAt.toMillis() });
-    }
-    if (tag) {
-      for (const m of media.filter((m) => m.tags.includes(tag.id))) {
-        items.push({ type: 'media', data: m, time: m.publishedAt?.toMillis() ?? m.createdAt.toMillis() });
-      }
-    }
-    items.sort((a, b) => sort === 'newest' ? b.time - a.time : a.time - b.time);
+  const tagMedia = useMemo(() => {
+    if (!tag) return [];
+    const items = media.filter((m) => m.tags.includes(tag.id));
+    items.sort((a, b) => {
+      const at = a.publishedAt?.toMillis() ?? a.createdAt.toMillis();
+      const bt = b.publishedAt?.toMillis() ?? b.createdAt.toMillis();
+      return sort === 'newest' ? bt - at : at - bt;
+    });
     return items;
-  }, [posts, media, tag, sort]);
+  }, [media, tag, sort]);
+
+  const sortedPosts = useMemo(() => {
+    const items = [...posts];
+    items.sort((a, b) => {
+      const at = a.publishedAt?.toMillis() ?? a.createdAt.toMillis();
+      const bt = b.publishedAt?.toMillis() ?? b.createdAt.toMillis();
+      return sort === 'newest' ? bt - at : at - bt;
+    });
+    return items;
+  }, [posts, sort]);
+
+  useEffect(() => {
+    if (tagMedia.length > 0 && !activeVideoId) {
+      setActiveVideoId(tagMedia[0].id);
+    }
+  }, [tagMedia, activeVideoId]);
+
+  const activeVideo = tagMedia.find((m) => m.id === activeVideoId) ?? tagMedia[0];
+
+  const mobileVideoRefs = useRef<Map<string, HTMLDivElement>>(new Map());
 
   if (loading || postsLoading || mediaLoading) return <Spinner />;
 
   if (!tag) {
     return (
       <div className="text-center py-16">
-        <p className="font-display font-bold text-shefel-red text-xl">
+        <p className="font-display font-bold text-shefel-red text-2xl">
           תגית לא נמצאה
         </p>
       </div>
     );
   }
+
+  const hasMedia = tagMedia.length > 0;
+  const hasPosts = sortedPosts.length > 0;
+  const hasMultipleMedia = tagMedia.length > 1;
 
   return (
     <>
@@ -90,17 +227,17 @@ export function TagPage() {
         </h1>
         <Link
           to={from}
-          className="inline-block font-body font-bold text-shefel-red hover:text-shefel-black transition-colors no-underline mt-2"
+          className="inline-block font-body font-bold text-shefel-red text-lg hover:text-shefel-black transition-colors no-underline mt-2"
         >
           {backLabel}
         </Link>
       </div>
 
-      {allItems.length > 1 && (
-        <div className="flex justify-center gap-2 mb-6">
+      {(hasMedia || hasPosts) && (tagMedia.length + sortedPosts.length) > 1 && (
+        <div className="flex justify-center gap-3 mb-6">
           <button
             onClick={() => setSort('newest')}
-            className={`font-body font-bold text-sm px-3 py-1 rounded-full border-2 transition-all duration-200 active:scale-95 ${
+            className={`font-body font-bold text-base px-4 py-2 rounded-full border-2 transition-all duration-200 active:scale-95 ${
               sort === 'newest'
                 ? 'bg-shefel-red text-shefel-yellow border-shefel-yellow'
                 : 'bg-shefel-yellow text-shefel-red border-shefel-red/30 hover:border-shefel-red'
@@ -110,7 +247,7 @@ export function TagPage() {
           </button>
           <button
             onClick={() => setSort('oldest')}
-            className={`font-body font-bold text-sm px-3 py-1 rounded-full border-2 transition-all duration-200 active:scale-95 ${
+            className={`font-body font-bold text-base px-4 py-2 rounded-full border-2 transition-all duration-200 active:scale-95 ${
               sort === 'oldest'
                 ? 'bg-shefel-red text-shefel-yellow border-shefel-yellow'
                 : 'bg-shefel-yellow text-shefel-red border-shefel-red/30 hover:border-shefel-red'
@@ -121,21 +258,64 @@ export function TagPage() {
         </div>
       )}
 
-      {allItems.length === 0 ? (
+      {/* Desktop: playlist layout */}
+      {hasMedia && (
+        <>
+          <div className="hidden lg:block max-w-5xl mx-auto px-4 mb-8">
+            <div className={`grid gap-8 ${hasMultipleMedia ? 'grid-cols-[320px_1fr]' : 'grid-cols-1 max-w-lg mx-auto'}`} dir="rtl">
+              {hasMultipleMedia && (
+                <PlaylistSidebar
+                  items={tagMedia}
+                  activeId={activeVideo?.id ?? ''}
+                  onSelect={(item) => setActiveVideoId(item.id)}
+                  searchQuery={searchQuery}
+                  onSearchChange={setSearchQuery}
+                />
+              )}
+              {activeVideo && (
+                <PlaylistMainVideo item={activeVideo} tagsMap={tagsMap} />
+              )}
+            </div>
+          </div>
+
+          {/* Mobile view: vertical scroll of videos */}
+          <div className="lg:hidden max-w-md mx-auto px-4 mb-8 space-y-6">
+            {tagMedia.map((item) => (
+              <div
+                key={item.id}
+                ref={(el) => {
+                  if (el) mobileVideoRefs.current.set(item.id, el);
+                  else mobileVideoRefs.current.delete(item.id);
+                }}
+              >
+                <MediaCard item={item} tagsMap={tagsMap} />
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+
+      {/* Posts grid */}
+      {hasPosts && (
+        <>
+          {hasMedia && (
+            <h2 className="font-display font-bold text-shefel-black text-2xl text-center mb-4">
+              פוסטים
+            </h2>
+          )}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto px-4 grid-animate">
+            {sortedPosts.map((post) => (
+              <PostCard key={post.id} post={post} tagsMap={tagsMap} />
+            ))}
+          </div>
+        </>
+      )}
+
+      {!hasMedia && !hasPosts && (
         <div className="text-center py-16">
-          <p className="font-display font-bold text-shefel-red text-xl">
+          <p className="font-display font-bold text-shefel-red text-2xl">
             אין תוכן להצגה
           </p>
-        </div>
-      ) : (
-        <div key={sort} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto px-4 grid-animate">
-          {allItems.map((item) =>
-            item.type === 'post' ? (
-              <PostCard key={item.data.id} post={item.data} tagsMap={tagsMap} />
-            ) : (
-              <MediaCarouselCard key={item.data.id} item={item.data} tagsMap={tagsMap} />
-            )
-          )}
         </div>
       )}
     </>
