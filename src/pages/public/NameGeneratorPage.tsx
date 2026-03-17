@@ -59,6 +59,7 @@ export function NameGeneratorPage() {
   const [ratingLocked, setRatingLocked] = useState(false);
   const [avgRating, setAvgRating] = useState<{ avg: number; count: number } | null>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const spinRef = useRef<(() => void) | null>(null);
   const starIdRef = useRef(0);
 
   const makeStars = (count: number, minDist: number, maxDist: number) =>
@@ -76,10 +77,22 @@ export function NameGeneratorPage() {
       };
     });
 
-  const handleNameClick = useCallback(() => {
+  const handleNameClick = useCallback(async () => {
     if (isSpinning) return;
     const url = `${window.location.origin}/name?n=${encodeURIComponent(displayName)}`;
-    navigator.clipboard.writeText(url);
+    try {
+      await navigator.clipboard.writeText(url);
+    } catch {
+      // Fallback for mobile browsers where clipboard API fails
+      const textarea = document.createElement('textarea');
+      textarea.value = url;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+    }
     setCopied(true);
     setTimeout(() => setCopied(false), 2500);
 
@@ -112,6 +125,9 @@ export function NameGeneratorPage() {
     } catch {
       // silent fail — analytics still tracks it
     }
+    setTimeout(() => {
+      spinRef.current?.();
+    }, 2000);
   }, [ratingLocked, displayName]);
 
   const spin = useCallback(() => {
@@ -148,6 +164,8 @@ export function NameGeneratorPage() {
 
     intervalRef.current = setTimeout(tick, speed);
   }, [isSpinning, getRandomName]);
+
+  spinRef.current = spin;
 
   useEffect(() => {
     return () => {
