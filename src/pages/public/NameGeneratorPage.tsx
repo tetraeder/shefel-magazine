@@ -341,7 +341,7 @@ export function NameGeneratorPage() {
           >
             {suggestSubmitted ? (
               <h2 className="font-display font-black text-shefel-red text-3xl text-center py-8">
-                !תודה רבה
+                תודה רבה!
               </h2>
             ) : (
               <>
