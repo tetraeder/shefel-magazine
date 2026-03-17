@@ -23,7 +23,10 @@ interface Star {
 }
 
 export function NameGeneratorPage() {
-  const [displayName, setDisplayName] = useState(() => getRandomName());
+  const [displayName, setDisplayName] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('n') || getRandomName();
+  });
   const [isSpinning, setIsSpinning] = useState(false);
   const [isRevealed, setIsRevealed] = useState(true);
   const [showSuggest, setShowSuggest] = useState(false);
@@ -54,7 +57,8 @@ export function NameGeneratorPage() {
 
   const handleNameClick = useCallback(() => {
     if (isSpinning) return;
-    navigator.clipboard.writeText(displayName);
+    const url = `${window.location.origin}/name?n=${encodeURIComponent(displayName)}`;
+    navigator.clipboard.writeText(url);
     setCopied(true);
     setTimeout(() => setCopied(false), 2500);
 
@@ -166,7 +170,7 @@ export function NameGeneratorPage() {
         {/* Copied tooltip - starts from center of name */}
         {copied && (
           <span className="absolute top-1/2 left-1/2 z-50 bg-shefel-red text-shefel-yellow text-lg font-display font-bold px-5 py-2 rounded-xl whitespace-nowrap animate-fade-in shadow-lg">
-            שם הועתק!
+            קישור הועתק בהצלחה!
           </span>
         )}
 
