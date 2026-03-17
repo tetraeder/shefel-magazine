@@ -91,7 +91,7 @@ export function Header() {
 
       {/* Mobile menu overlay */}
       {menuOpen && (
-        <div className="menu-overlay md:hidden fixed inset-x-0 top-0 bottom-0 bg-shefel-red z-40 flex flex-col items-center justify-center gap-8 pt-20">
+        <div className="menu-overlay md:hidden fixed inset-x-0 top-[68px] bottom-0 bg-shefel-red z-40 flex flex-col items-center justify-center gap-6">
           {navLinks.map((link, i) => (
             <Link
               key={link.to}
