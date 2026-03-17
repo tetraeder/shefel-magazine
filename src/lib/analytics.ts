@@ -27,6 +27,10 @@ export function trackNameSuggest(firstName: string, lastName: string) {
   track('name_suggest', { first_name: firstName, last_name: lastName });
 }
 
+export function trackNameRate(name: string, rating: number) {
+  track('name_rate', { rated_name: name, rating: String(rating) });
+}
+
 // --- Contact / forms ---
 export function trackFormSubmit(formName: string) {
   track('form_submit', { form_name: formName });

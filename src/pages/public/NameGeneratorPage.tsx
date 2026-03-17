@@ -1,6 +1,8 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { getAppDb } from '../../firebase';
 import { NAMES } from '../../data/names';
-import { trackNameSpin, trackNameSuggest, trackCTAClick } from '../../lib/analytics';
+import { trackNameSpin, trackNameSuggest, trackCTAClick, trackNameRate } from '../../lib/analytics';
 
 function getRandomName(exclude?: string): string {
   let name: string;
@@ -29,6 +31,9 @@ export function NameGeneratorPage() {
   const [lastName, setLastName] = useState('');
   const [copied, setCopied] = useState(false);
   const [stars, setStars] = useState<Star[]>([]);
+  const [rating, setRating] = useState(0);
+  const [hoverRating, setHoverRating] = useState(0);
+  const [ratingLocked, setRatingLocked] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const starIdRef = useRef(0);
 
@@ -57,10 +62,34 @@ export function NameGeneratorPage() {
     setTimeout(() => setStars([]), 2500);
   }, [isSpinning, displayName]);
 
+  const handleRate = useCallback(async (value: number) => {
+    if (ratingLocked) return;
+    setRating(value);
+    setRatingLocked(true);
+    trackNameRate(displayName, value);
+    if (value === 5) {
+      setStars(makeStars(100, 40, 180));
+      setTimeout(() => setStars([]), 2500);
+    }
+    try {
+      const db = getAppDb();
+      await addDoc(collection(db, 'nameRatings'), {
+        name: displayName,
+        rating: value,
+        createdAt: serverTimestamp(),
+      });
+    } catch {
+      // silent fail — analytics still tracks it
+    }
+  }, [ratingLocked, displayName]);
+
   const spin = useCallback(() => {
     if (isSpinning) return;
     setIsSpinning(true);
     setIsRevealed(false);
+    setRating(0);
+    setRatingLocked(false);
+    setHoverRating(0);
 
     let speed = 50;
     let elapsed = 0;
@@ -174,6 +203,55 @@ export function NameGeneratorPage() {
             }}
           />
         )}
+      </div>
+
+      {/* Star rating — always takes space to prevent layout jump */}
+      <div className="relative flex items-center justify-center h-12 transition-all duration-500">
+        {isSpinning ? (
+          <div className="flex gap-2" dir="ltr">
+            {[0, 1, 2, 3, 4].map((i) => (
+              <span
+                key={i}
+                className="text-3xl md:text-4xl select-none"
+                style={{
+                  WebkitTextStroke: '2px #CC0000',
+                  color: 'transparent',
+                  filter: 'drop-shadow(0 1px 2px rgba(204,0,0,0.3))',
+                  animation: `starLoading 1.2s ease-in-out ${i * 0.2}s infinite`,
+                }}
+              >
+                ☆
+              </span>
+            ))}
+          </div>
+        ) : isRevealed ? (
+          <div className="flex gap-2" dir="ltr">
+            {[1, 2, 3, 4, 5].map((value, i) => {
+              const active = value <= (hoverRating || rating);
+              return (
+                <button
+                  key={value}
+                  onClick={() => handleRate(value)}
+                  onMouseEnter={() => !ratingLocked && setHoverRating(value)}
+                  onMouseLeave={() => !ratingLocked && setHoverRating(0)}
+                  className="text-3xl md:text-4xl cursor-pointer select-none"
+                  style={{
+                    animation: `starBounceIn 0.4s ease-out ${i * 0.08}s both`,
+                    transform: active ? 'scale(1.2)' : 'scale(1)',
+                    filter: active
+                      ? 'drop-shadow(0 0 6px rgba(255,194,0,0.8)) drop-shadow(0 0 2px rgba(204,0,0,0.5))'
+                      : 'drop-shadow(0 1px 2px rgba(204,0,0,0.3))',
+                    transition: 'transform 0.2s, filter 0.2s',
+                    WebkitTextStroke: active ? '0' : '2px #CC0000',
+                    color: active ? '' : 'transparent',
+                  }}
+                >
+                  {active ? '⭐' : '☆'}
+                </button>
+              );
+            })}
+          </div>
+        ) : null}
       </div>
 
       <button
@@ -320,6 +398,30 @@ export function NameGeneratorPage() {
         }
         .animate-fade-in {
           animation: popFloat 2.2s ease-out forwards;
+        }
+        @keyframes starLoading {
+          0%, 100% {
+            transform: scale(1);
+            opacity: 0.3;
+          }
+          50% {
+            transform: scale(1.3);
+            opacity: 1;
+          }
+        }
+        @keyframes starBounceIn {
+          0% {
+            opacity: 0;
+            transform: scale(0) translateY(10px);
+          }
+          60% {
+            opacity: 1;
+            transform: scale(1.3) translateY(-4px);
+          }
+          100% {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+          }
         }
       `}</style>
     </div>
