@@ -240,7 +240,7 @@ export function TagPage() {
               ← שפל בדרכים
             </Link>
           )}
-          {slug === 'שפל-בדרכים' && (
+          {/* {slug === 'שפל-בדרכים' && (
             <Link
               to="/tag/המקומון"
               state={{ from }}
@@ -248,7 +248,7 @@ export function TagPage() {
             >
               ← המקומון
             </Link>
-          )}
+          )} */}
         </div>
       </div>
 
