@@ -10,6 +10,16 @@ function getRandomName(exclude?: string): string {
   return name;
 }
 
+interface Star {
+  id: number;
+  x: number;
+  y: number;
+  angle: number;
+  distance: number;
+  size: number;
+  delay: number;
+}
+
 export function NameGeneratorPage() {
   const [displayName, setDisplayName] = useState(() => getRandomName());
   const [isSpinning, setIsSpinning] = useState(false);
@@ -17,7 +27,35 @@ export function NameGeneratorPage() {
   const [showSuggest, setShowSuggest] = useState(false);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [copied, setCopied] = useState(false);
+  const [stars, setStars] = useState<Star[]>([]);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const starIdRef = useRef(0);
+
+  const makeStars = (count: number, minDist: number, maxDist: number) =>
+    Array.from({ length: count }, () => {
+      const angle = Math.random() * 360;
+      const distance = minDist + Math.random() * maxDist;
+      return {
+        id: starIdRef.current++,
+        x: 0,
+        y: 0,
+        angle,
+        distance,
+        size: 10 + Math.random() * 16,
+        delay: Math.random() * 0.6,
+      };
+    });
+
+  const handleNameClick = useCallback(() => {
+    if (isSpinning) return;
+    navigator.clipboard.writeText(displayName);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2500);
+
+    setStars(makeStars(100, 40, 180));
+    setTimeout(() => setStars([]), 2500);
+  }, [isSpinning, displayName]);
 
   const spin = useCallback(() => {
     if (isSpinning) return;
@@ -67,7 +105,10 @@ export function NameGeneratorPage() {
         <div className="bg-shefel-red rounded-2xl border-4 border-shefel-red p-2">
           <div className="bg-shefel-yellow rounded-xl border-4 border-shefel-yellow-light overflow-hidden">
             {/* Name display */}
-            <div className="relative flex items-center justify-center h-32 md:h-40">
+            <div
+              className={`relative flex items-center justify-center h-32 md:h-40 ${!isSpinning ? 'cursor-pointer' : ''}`}
+              onClick={handleNameClick}
+            >
               {/* Slot machine lines */}
               <div className="absolute inset-x-0 top-0 h-px bg-shefel-red/20" />
               <div className="absolute inset-x-0 bottom-0 h-px bg-shefel-red/20" />
@@ -88,9 +129,35 @@ export function NameGeneratorPage() {
               >
                 {displayName}
               </p>
+
             </div>
           </div>
         </div>
+
+        {/* Copied tooltip - starts from center of name */}
+        {copied && (
+          <span className="absolute top-1/2 left-1/2 z-50 bg-shefel-red text-shefel-yellow text-lg font-display font-bold px-5 py-2 rounded-xl whitespace-nowrap animate-fade-in shadow-lg">
+            שם הועתק!
+          </span>
+        )}
+
+        {/* Star burst animation - outside overflow-hidden */}
+        {stars.map((star) => (
+          <span
+            key={star.id}
+            className="absolute pointer-events-none z-40"
+            style={{
+              left: '50%',
+              top: '50%',
+              fontSize: `${star.size}px`,
+              animation: `starBurst 1.2s ease-out ${star.delay}s forwards`,
+              '--star-x': `${Math.cos((star.angle * Math.PI) / 180) * star.distance}px`,
+              '--star-y': `${Math.sin((star.angle * Math.PI) / 180) * star.distance}px`,
+            } as React.CSSProperties}
+          >
+            ⭐
+          </span>
+        ))}
 
         {/* Rotating border shine effect */}
         {!isSpinning && (
@@ -123,7 +190,7 @@ export function NameGeneratorPage() {
 
       <button
         onClick={() => { trackCTAClick('suggest_name', 'name_page'); setShowSuggest(true); }}
-        className="font-body text-shefel-red/70 text-lg underline underline-offset-4 hover:text-shefel-red transition-colors cursor-pointer"
+        className="font-body text-shefel-red/70 text-xl md:text-2xl underline underline-offset-4 hover:text-shefel-red transition-colors cursor-pointer"
       >
         רוצים להציע שם מפעם?
       </button>
@@ -132,7 +199,7 @@ export function NameGeneratorPage() {
         href="https://chat.whatsapp.com/LKKKpvIXe6t0dBnJfqZedd?mode=gi_t"
         target="_blank"
         rel="noopener noreferrer"
-        className="font-body text-shefel-red/70 text-lg underline underline-offset-4 hover:text-shefel-red transition-colors"
+        className="font-body text-shefel-red/70 text-xl md:text-2xl underline underline-offset-4 hover:text-shefel-red transition-colors"
       >
         לקבוצת הווצאפ ׳זוכרים את׳
       </a>
@@ -225,6 +292,34 @@ export function NameGeneratorPage() {
           100% {
             --shine-angle: 360deg;
           }
+        }
+        @keyframes starBurst {
+          0% {
+            transform: translate(-50%, -50%) translate(0, 0) scale(1);
+            opacity: 1;
+          }
+          20% {
+            transform: translate(-50%, -50%) translate(calc(var(--star-x) * 0.4), calc(var(--star-y) * 0.4)) scale(1.3);
+            opacity: 1;
+          }
+          70% {
+            transform: translate(-50%, -50%) translate(var(--star-x), var(--star-y)) scale(1);
+            opacity: 0.8;
+          }
+          100% {
+            transform: translate(-50%, -50%) translate(calc(var(--star-x) * 1.2), calc(var(--star-y) * 1.2)) scale(0);
+            opacity: 0;
+          }
+        }
+        @keyframes popFloat {
+          0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+          10% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+          20% { transform: translate(-50%, calc(-50% - 20px)) scale(1); opacity: 1; }
+          60% { opacity: 1; transform: translate(-50%, calc(-50% - 60px)) scale(1); }
+          100% { opacity: 0; transform: translate(-50%, calc(-50% - 100px)) scale(0.8); }
+        }
+        .animate-fade-in {
+          animation: popFloat 2.2s ease-out forwards;
         }
       `}</style>
     </div>
