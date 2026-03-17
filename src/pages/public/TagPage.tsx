@@ -231,13 +231,24 @@ export function TagPage() {
           >
             {backLabel}
           </Link>
-          <Link
-            to="/tag/המקומון"
-            state={{ from }}
-            className="font-body font-bold text-shefel-red text-lg hover:text-shefel-black transition-colors no-underline"
-          >
-            ← המקומון
-          </Link>
+          {slug === 'המקומון' && (
+            <Link
+              to="/tag/שפל-בדרכים"
+              state={{ from }}
+              className="font-body font-bold text-shefel-red text-lg hover:text-shefel-black transition-colors no-underline"
+            >
+              ← שפל בדרכים
+            </Link>
+          )}
+          {slug === 'שפל-בדרכים' && (
+            <Link
+              to="/tag/המקומון"
+              state={{ from }}
+              className="font-body font-bold text-shefel-red text-lg hover:text-shefel-black transition-colors no-underline"
+            >
+              ← המקומון
+            </Link>
+          )}
         </div>
       </div>
 
