@@ -90,7 +90,7 @@ function makeMedia(tagIds: Record<string, string>) {
   return [
     {
       title: 'ערן לוי — אגדת כדורגל',
-      cloudinaryUrl:
+      mediaOriginUrl:
         'https://res.cloudinary.com/dsheksfdb/video/upload/v1771839186/%D7%A2%D7%A8%D7%9F_%D7%9C%D7%95%D7%99_%D7%90%D7%92%D7%93%D7%AA_%D7%9B%D7%93%D7%95%D7%A8%D7%92%D7%9C_1_lt2fqn.mp4',
       thumbnailUrl:
         'https://res.cloudinary.com/dsheksfdb/video/upload/so_0/v1771839186/%D7%A2%D7%A8%D7%9F_%D7%9C%D7%95%D7%99_%D7%90%D7%92%D7%93%D7%AA_%D7%9B%D7%93%D7%95%D7%A8%D7%92%D7%9C_1_lt2fqn.jpg',
@@ -102,7 +102,7 @@ function makeMedia(tagIds: Record<string, string>) {
     },
     {
       title: 'כפס 1928 — עירוני אשדוד',
-      cloudinaryUrl:
+      mediaOriginUrl:
         'https://res.cloudinary.com/dsheksfdb/video/upload/v1771839212/%D7%9B%D7%A4%D7%A1_1928_%D7%A2%D7%99%D7%A8%D7%95%D7%A0%D7%99_%D7%90%D7%A9%D7%93%D7%95%D7%93_mgyu88.mp4',
       thumbnailUrl:
         'https://res.cloudinary.com/dsheksfdb/video/upload/so_0/v1771839212/%D7%9B%D7%A4%D7%A1_1928_%D7%A2%D7%99%D7%A8%D7%95%D7%A0%D7%99_%D7%90%D7%A9%D7%93%D7%95%D7%93_mgyu88.jpg',

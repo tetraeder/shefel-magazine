@@ -41,16 +41,25 @@ export function MediaCarouselCard({ item, tagsMap, isActive = false }: MediaCaro
   return (
     <article className="bg-shefel-yellow rounded-none overflow-hidden border-4 border-shefel-red shadow-lg flex flex-col">
       <div className="relative aspect-[9/16] bg-shefel-black">
-        <video
-          ref={videoRef}
-          src={item.cloudinaryUrl}
-          poster={item.thumbnailUrl}
-          muted
-          playsInline
-          controls
-          preload="metadata"
-          className="w-full h-full object-cover"
-        />
+        {item.mediaOriginUrl.includes('mediadelivery.net') ? (
+          <iframe
+            src={item.mediaOriginUrl.replace('/play/', '/embed/')}
+            className="w-full h-full"
+            allow="autoplay; fullscreen; picture-in-picture"
+            allowFullScreen
+          />
+        ) : (
+          <video
+            ref={videoRef}
+            src={item.mediaOriginUrl}
+            poster={item.thumbnailUrl}
+            muted
+            playsInline
+            controls
+            preload="metadata"
+            className="w-full h-full object-cover"
+          />
+        )}
       </div>
       <div className="p-3 shrink-0">
         <div className="flex items-center justify-center gap-2">

@@ -24,14 +24,23 @@ export function MediaCard({ item, tagsMap, autoPlay = false }: MediaCardProps) {
         onClick={() => !playing && setPlaying(true)}
       >
         {playing ? (
-          <video
-            src={item.cloudinaryUrl}
-            autoPlay
-            muted={autoPlay}
-            controls
-            playsInline
-            className="w-full h-full object-cover"
-          />
+          item.mediaOriginUrl.includes('mediadelivery.net') ? (
+            <iframe
+              src={item.mediaOriginUrl.replace('/play/', '/embed/')}
+              className="w-full h-full"
+              allow="autoplay; fullscreen; picture-in-picture"
+              allowFullScreen
+            />
+          ) : (
+            <video
+              src={item.mediaOriginUrl}
+              autoPlay
+              muted={autoPlay}
+              controls
+              playsInline
+              className="w-full h-full object-cover"
+            />
+          )
         ) : (
           <>
             <img
@@ -57,6 +66,11 @@ export function MediaCard({ item, tagsMap, autoPlay = false }: MediaCardProps) {
           {item.title}
         </p>
       </div>
+      {item.credits && (
+        <p className="text-center text-shefel-red text-sm mt-1">
+          {item.credits}
+        </p>
+      )}
       {itemTags.length > 0 && (
         <div className="flex flex-wrap justify-center gap-2 mt-2">
           {itemTags.map((tag) => (

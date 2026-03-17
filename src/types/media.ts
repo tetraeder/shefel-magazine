@@ -3,10 +3,11 @@ import { Timestamp } from 'firebase/firestore';
 export interface MediaItem {
   id: string;
   title: string;
-  cloudinaryUrl: string;
+  mediaOriginUrl: string;
   thumbnailUrl: string;
   tags: string[];
   issueId: string;
+  credits: string;
   order: number;
   publishedAt: Timestamp | null;
   createdAt: Timestamp;
