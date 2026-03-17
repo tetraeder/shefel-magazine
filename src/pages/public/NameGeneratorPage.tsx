@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, getDocs, query, where, serverTimestamp } from 'firebase/firestore';
 import { getAppDb } from '../../firebase';
 import { NAMES } from '../../data/names';
 import { trackNameSpin, trackNameSuggest, trackCTAClick, trackNameRate } from '../../lib/analytics';
@@ -37,6 +37,7 @@ export function NameGeneratorPage() {
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [ratingLocked, setRatingLocked] = useState(false);
+  const [avgRating, setAvgRating] = useState<{ avg: number; count: number } | null>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const starIdRef = useRef(0);
 
@@ -82,6 +83,12 @@ export function NameGeneratorPage() {
         rating: value,
         createdAt: serverTimestamp(),
       });
+      const snap = await getDocs(query(collection(db, 'nameRatings'), where('name', '==', displayName)));
+      if (!snap.empty) {
+        let total = 0;
+        snap.forEach((d) => { total += d.data().rating; });
+        setAvgRating({ avg: total / snap.size, count: snap.size });
+      }
     } catch {
       // silent fail — analytics still tracks it
     }
@@ -94,6 +101,7 @@ export function NameGeneratorPage() {
     setRating(0);
     setRatingLocked(false);
     setHoverRating(0);
+    setAvgRating(null);
 
     let speed = 50;
     let elapsed = 0;
@@ -258,6 +266,22 @@ export function NameGeneratorPage() {
         ) : null}
       </div>
 
+      {/* Average rating display */}
+      <div className="h-8 flex items-center justify-center">
+        {avgRating && (
+          <div
+            className="flex items-center gap-2 font-body text-shefel-red/80 text-base"
+            style={{ animation: 'avgSlideIn 0.6s ease-out' }}
+          >
+            <span>ממוצע דירוגים:</span>
+            <span className="font-bold text-lg" style={{ animation: 'avgCountUp 0.8s ease-out' }}>
+              {avgRating.avg.toFixed(1)} ⭐
+            </span>
+            <span className="text-shefel-red/50">({avgRating.count} דירוגים)</span>
+          </div>
+        )}
+      </div>
+
       <button
         onClick={spin}
         disabled={isSpinning}
@@ -402,6 +426,15 @@ export function NameGeneratorPage() {
         }
         .animate-fade-in {
           animation: popFloat 2.2s ease-out forwards;
+        }
+        @keyframes avgSlideIn {
+          0% { opacity: 0; transform: translateY(10px); }
+          100% { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes avgCountUp {
+          0% { opacity: 0; transform: scale(0.5); }
+          50% { transform: scale(1.2); }
+          100% { opacity: 1; transform: scale(1); }
         }
         @keyframes starLoading {
           0%, 100% {
