@@ -117,16 +117,17 @@ export function NameGeneratorPage() {
       spinRef.current?.();
     }, 2000);
     // Write to Firestore and update with real average in background
+    const ratedName = displayName;
     try {
       const db = getAppDb();
       addDoc(collection(db, 'nameRatings'), {
-        name: displayName,
+        name: ratedName,
         rating: value,
         createdAt: serverTimestamp(),
       }).then(() =>
-        getDocs(query(collection(db, 'nameRatings'), where('name', '==', displayName)))
+        getDocs(query(collection(db, 'nameRatings'), where('name', '==', ratedName)))
       ).then((snap) => {
-        if (!snap.empty) {
+        if (!snap.empty && !isSpinningRef.current) {
           let total = 0;
           snap.forEach((d) => { total += d.data().rating; });
           setAvgRating({ avg: total / snap.size, count: snap.size });
