@@ -58,7 +58,6 @@ export function NameGeneratorPage() {
   const [hoverRating, setHoverRating] = useState(0);
   const [ratingLocked, setRatingLocked] = useState(false);
   const [avgRating, setAvgRating] = useState<{ avg: number; count: number } | null>(null);
-  const [spinCount, setSpinCount] = useState(0);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const spinRef = useRef<(() => void) | null>(null);
   const starIdRef = useRef(0);
@@ -101,7 +100,7 @@ export function NameGeneratorPage() {
     setTimeout(() => setStars([]), 2500);
   }, [isSpinning, displayName]);
 
-  const handleRate = useCallback(async (value: number) => {
+  async function handleRate(value: number) {
     if (ratingLocked) return;
     setRating(value);
     setRatingLocked(true);
@@ -129,7 +128,7 @@ export function NameGeneratorPage() {
     setTimeout(() => {
       spinRef.current?.();
     }, 2000);
-  }, [ratingLocked, displayName]);
+  }
 
   const spin = useCallback(() => {
     if (isSpinning) return;
@@ -139,7 +138,6 @@ export function NameGeneratorPage() {
     setRatingLocked(false);
     setHoverRating(0);
     setAvgRating(null);
-    setSpinCount((c) => c + 1);
 
     let speed = 50;
     let elapsed = 0;
@@ -258,7 +256,7 @@ export function NameGeneratorPage() {
       </div>
 
       {/* Star rating — always takes space to prevent layout jump */}
-      <div key={spinCount} className="relative flex items-center justify-center h-20 mb-4 transition-all duration-500">
+      <div className="relative flex items-center justify-center h-20 mb-4 transition-all duration-500">
         {isSpinning ? (
           <div className="flex gap-2" dir="ltr">
             {[0, 1, 2, 3, 4].map((i) => (
