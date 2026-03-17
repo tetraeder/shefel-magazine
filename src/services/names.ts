@@ -21,9 +21,10 @@ export interface NameEntry {
 }
 
 export async function getAllNames(): Promise<NameEntry[]> {
-  const q = query(collection(getAppDb(), COLLECTION), orderBy('name', 'asc'));
-  const snapshot = await getDocs(q);
-  return snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as NameEntry));
+  const snapshot = await getDocs(collection(getAppDb(), COLLECTION));
+  const names = snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as NameEntry));
+  names.sort((a, b) => a.name.localeCompare(b.name, 'he'));
+  return names;
 }
 
 export async function createName(name: string): Promise<string> {
