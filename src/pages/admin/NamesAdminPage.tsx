@@ -95,11 +95,11 @@ export function NamesAdminPage() {
       {/* Suggestions section */}
       {!suggestionsLoading && suggestions.length > 0 && (
         <div className="mb-8">
-          <h2 className="font-display font-black text-shefel-black text-2xl mb-4">
+          <h2 className="font-black text-shefel-black text-2xl mb-4">
             הצעות ({suggestions.length})
           </h2>
           <div className="bg-shefel-white rounded-lg border-2 border-shefel-red overflow-hidden">
-            <table className="w-full text-sm">
+            <table className="w-full text-lg">
               <thead className="bg-shefel-red text-shefel-white">
                 <tr>
                   <th className="px-4 py-3 text-right font-bold">שם פרטי</th>
@@ -115,13 +115,13 @@ export function NamesAdminPage() {
                     <td className="px-4 py-2 flex gap-2">
                       <button
                         onClick={() => handleApproveSuggestion(s)}
-                        className="bg-green-600 text-white font-bold px-3 py-1 rounded text-xs hover:bg-green-700 transition-colors"
+                        className="bg-green-600 text-white font-bold px-3 py-1 rounded text-base hover:bg-green-700 transition-colors"
                       >
                         הוסף לרשימה
                       </button>
                       <button
                         onClick={() => handleIgnoreSuggestion(s.id)}
-                        className="bg-gray-400 text-white font-bold px-3 py-1 rounded text-xs hover:bg-gray-500 transition-colors"
+                        className="bg-gray-400 text-white font-bold px-3 py-1 rounded text-base hover:bg-gray-500 transition-colors"
                       >
                         התעלם
                       </button>
@@ -135,7 +135,7 @@ export function NamesAdminPage() {
       )}
 
       <div className="flex items-center justify-between mb-6">
-        <h1 className="font-display font-black text-shefel-black text-3xl">
+        <h1 className="font-black text-shefel-black text-3xl">
           שמות מפעמים ({names.length})
         </h1>
         <div className="flex gap-2">
@@ -159,15 +159,15 @@ export function NamesAdminPage() {
 
       {showAdd && (
         <div className="bg-shefel-white rounded-lg border-2 border-shefel-red p-6 mb-6">
-          <h2 className="font-display font-bold text-xl mb-4">שם חדש</h2>
+          <h2 className="font-bold text-xl mb-4">שם חדש</h2>
           <div className="flex gap-3 items-end">
             <div className="flex-1">
-              <label className="block font-body font-bold text-sm mb-1">שם</label>
+              <label className="block font-bold text-base mb-1">שם</label>
               <input
                 value={newName}
                 onChange={(e) => setNewName(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
-                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-sm"
+                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-base"
                 autoFocus
               />
             </div>
@@ -193,12 +193,12 @@ export function NamesAdminPage() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="חיפוש שם..."
-          className="w-full md:w-80 border-2 border-gray-300 rounded px-3 py-2 text-sm"
+          className="w-full md:w-80 border-2 border-gray-300 rounded px-3 py-2 text-base"
         />
       </div>
 
       <div className="bg-shefel-white rounded-lg border-2 border-gray-200 overflow-hidden">
-        <table className="w-full text-sm">
+        <table className="w-full text-lg">
           <thead className="bg-shefel-black text-shefel-white">
             <tr>
               <th className="px-4 py-3 text-right font-bold w-12">#</th>
@@ -217,19 +217,19 @@ export function NamesAdminPage() {
                         value={editValue}
                         onChange={(e) => setEditValue(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && handleUpdate(entry.id)}
-                        className="flex-1 border-2 border-shefel-red rounded px-2 py-1 text-sm"
+                        className="flex-1 border-2 border-shefel-red rounded px-2 py-1 text-base"
                         autoFocus
                       />
                       <button
                         onClick={() => handleUpdate(entry.id)}
                         disabled={saving}
-                        className="text-shefel-red hover:underline font-bold text-xs"
+                        className="text-shefel-red hover:underline font-bold text-base"
                       >
                         שמור
                       </button>
                       <button
                         onClick={() => setEditingId(null)}
-                        className="text-gray-500 hover:underline font-bold text-xs"
+                        className="text-gray-500 hover:underline font-bold text-base"
                       >
                         ביטול
                       </button>

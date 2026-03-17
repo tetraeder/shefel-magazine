@@ -99,7 +99,7 @@ export function MediaAdminPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="font-display font-black text-shefel-black text-3xl">
+        <h1 className="font-black text-shefel-black text-3xl">
           מדיה
         </h1>
         <button
@@ -112,55 +112,55 @@ export function MediaAdminPage() {
 
       {showForm && (
         <div className="bg-shefel-white rounded-lg border-2 border-shefel-red p-6 mb-6">
-          <h2 className="font-display font-bold text-xl mb-4">
+          <h2 className="font-bold text-xl mb-4">
             {editing ? 'עריכת מדיה' : 'מדיה חדשה'}
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="md:col-span-2">
-              <label className="block font-body font-bold text-sm mb-1">כותרת</label>
+              <label className="block font-bold text-base mb-1">כותרת</label>
               <input
                 value={form.title}
                 onChange={(e) => setForm({ ...form, title: e.target.value })}
-                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-sm"
+                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-base"
               />
             </div>
             <div>
-              <label className="block font-body font-bold text-sm mb-1">קישור וידאו</label>
+              <label className="block font-bold text-base mb-1">קישור וידאו</label>
               <input
                 type="url"
                 value={form.mediaOriginUrl}
                 onChange={(e) => setForm({ ...form, mediaOriginUrl: e.target.value })}
-                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-sm"
+                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-base"
                 dir="ltr"
                 placeholder="https://..."
               />
             </div>
             <div>
-              <label className="block font-body font-bold text-sm mb-1">קישור תמונת תצוגה</label>
+              <label className="block font-bold text-base mb-1">קישור תמונת תצוגה</label>
               <input
                 type="url"
                 value={form.thumbnailUrl}
                 onChange={(e) => setForm({ ...form, thumbnailUrl: e.target.value })}
-                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-sm"
+                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-base"
                 dir="ltr"
               />
             </div>
             <div className="md:col-span-2">
-              <label className="block font-body font-bold text-sm mb-1">קרדיטים</label>
+              <label className="block font-bold text-base mb-1">קרדיטים</label>
               <input
                 value={form.credits}
                 onChange={(e) => setForm({ ...form, credits: e.target.value })}
-                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-sm"
+                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-base"
                 placeholder="אופציונלי — שמות תורמים, צלמים וכו׳"
               />
             </div>
             <div>
-              <label className="block font-body font-bold text-sm mb-1">גיליון</label>
+              <label className="block font-bold text-base mb-1">גיליון</label>
               <select
                 value={form.issueId}
                 onChange={(e) => setForm({ ...form, issueId: e.target.value })}
-                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-sm"
+                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-base"
               >
                 <option value="">בחר גיליון</option>
                 {issues.map((issue) => (
@@ -172,33 +172,33 @@ export function MediaAdminPage() {
               </select>
             </div>
             <div>
-              <label className="block font-body font-bold text-sm mb-1">סדר</label>
+              <label className="block font-bold text-base mb-1">סדר</label>
               <input
                 type="number"
                 value={form.order}
                 onChange={(e) => setForm({ ...form, order: Number(e.target.value) })}
-                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-sm"
+                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-base"
               />
             </div>
             <div>
-              <label className="block font-body font-bold text-sm mb-1">תאריך פרסום</label>
+              <label className="block font-bold text-base mb-1">תאריך פרסום</label>
               <input
                 type="date"
                 value={form.publishedAt}
                 onChange={(e) => setForm({ ...form, publishedAt: e.target.value })}
-                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-sm"
+                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-base"
                 dir="ltr"
               />
             </div>
             <div className="md:col-span-2">
-              <label className="block font-body font-bold text-sm mb-1">תגיות</label>
+              <label className="block font-bold text-base mb-1">תגיות</label>
               <div className="flex flex-wrap gap-2 items-center">
                 {tags.map((tag) => (
                   <button
                     key={tag.id}
                     type="button"
                     onClick={() => toggleTag(tag.id)}
-                    className={`px-3 py-1 text-sm font-bold rounded-full border-2 transition-colors ${
+                    className={`px-3 py-1 text-base font-bold rounded-full border-2 transition-colors ${
                       form.tags.includes(tag.id)
                         ? 'bg-shefel-red text-shefel-white border-shefel-red'
                         : 'bg-shefel-white text-shefel-black border-gray-300 hover:border-shefel-red'
@@ -213,13 +213,13 @@ export function MediaAdminPage() {
                     onChange={(e) => setNewTagName(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddTag())}
                     placeholder="תגית חדשה..."
-                    className="border-2 border-gray-300 rounded-full px-3 py-1 text-sm w-28"
+                    className="border-2 border-gray-300 rounded-full px-3 py-1 text-base w-28"
                   />
                   <button
                     type="button"
                     onClick={handleAddTag}
                     disabled={!newTagName.trim()}
-                    className="bg-shefel-red text-shefel-white font-bold px-3 py-1 text-sm rounded-full disabled:opacity-30"
+                    className="bg-shefel-red text-shefel-white font-bold px-3 py-1 text-base rounded-full disabled:opacity-30"
                   >
                     +
                   </button>
@@ -230,7 +230,7 @@ export function MediaAdminPage() {
 
           {form.thumbnailUrl && (
             <div className="mt-4">
-              <p className="font-body font-bold text-sm mb-1">תצוגה מקדימה</p>
+              <p className="font-bold text-base mb-1">תצוגה מקדימה</p>
               <img src={form.thumbnailUrl} alt="preview" className="w-32 h-auto rounded border-2 border-gray-300" />
             </div>
           )}
@@ -254,7 +254,7 @@ export function MediaAdminPage() {
       )}
 
       <div className="bg-shefel-white rounded-lg border-2 border-gray-200 overflow-hidden">
-        <table className="w-full text-sm">
+        <table className="w-full text-lg">
           <thead className="bg-shefel-black text-shefel-white">
             <tr>
               <th className="px-4 py-3 text-right font-bold">תמונה</th>
@@ -275,7 +275,7 @@ export function MediaAdminPage() {
                 </td>
                 <td className="px-4 py-3 font-bold">{item.title}</td>
                 <td className="px-4 py-3">{item.order}</td>
-                <td className="px-4 py-3 text-xs" dir="ltr">{tsToDateStr(item.publishedAt) || '—'}</td>
+                <td className="px-4 py-3 text-base" dir="ltr">{tsToDateStr(item.publishedAt) || '—'}</td>
                 <td className="px-4 py-3">{item.tags.length} תגיות</td>
                 <td className="px-4 py-3">
                   <button

@@ -20,13 +20,13 @@ export function AdminLayout() {
   }
 
   return (
-    <div className="min-h-screen bg-shefel-gray flex">
+    <div className="min-h-screen bg-shefel-gray flex" style={{ fontFamily: 'Arial, sans-serif' }}>
       <aside className="w-56 bg-shefel-black text-shefel-white flex flex-col">
         <div className="p-4 border-b border-shefel-red">
-          <h2 className="font-display font-black text-shefel-red text-xl">
+          <h2 className="font-black text-shefel-red text-2xl">
             ניהול
           </h2>
-          <p className="text-xs text-gray-400 mt-1">כדורגל שפל</p>
+          <p className="text-base text-gray-400 mt-1">כדורגל שפל</p>
         </div>
 
         <nav className="flex-1 p-2">
@@ -36,7 +36,7 @@ export function AdminLayout() {
               to={item.to}
               end={item.end}
               className={({ isActive }) =>
-                `block px-4 py-3 rounded font-body font-bold text-sm no-underline mb-1 transition-colors ${
+                `block px-4 py-3 rounded font-bold text-lg no-underline mb-1 transition-colors ${
                   isActive
                     ? 'bg-shefel-red text-shefel-white'
                     : 'text-gray-300 hover:bg-gray-800 hover:text-shefel-white'
@@ -51,7 +51,7 @@ export function AdminLayout() {
         <div className="p-4 border-t border-gray-700">
           <button
             onClick={handleLogout}
-            className="w-full text-sm text-gray-400 hover:text-shefel-white font-body transition-colors"
+            className="w-full text-base text-gray-400 hover:text-shefel-white transition-colors"
           >
             התנתק
           </button>

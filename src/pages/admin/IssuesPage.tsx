@@ -74,7 +74,7 @@ export function IssuesPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="font-display font-black text-shefel-black text-3xl">
+        <h1 className="font-black text-shefel-black text-3xl">
           גיליונות
         </h1>
         <button
@@ -87,17 +87,17 @@ export function IssuesPage() {
 
       {showForm && (
         <div className="bg-shefel-white rounded-lg border-2 border-shefel-red p-6 mb-6">
-          <h2 className="font-display font-bold text-xl mb-4">
+          <h2 className="font-bold text-xl mb-4">
             {editing ? 'עריכת גיליון' : 'גיליון חדש'}
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="block font-body font-bold text-sm mb-1">חודש</label>
+              <label className="block font-bold text-base mb-1">חודש</label>
               <select
                 value={form.month}
                 onChange={(e) => setForm({ ...form, month: Number(e.target.value) })}
-                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-sm"
+                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-base"
               >
                 {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
                   <option key={m} value={m}>
@@ -107,29 +107,29 @@ export function IssuesPage() {
               </select>
             </div>
             <div>
-              <label className="block font-body font-bold text-sm mb-1">שנה</label>
+              <label className="block font-bold text-base mb-1">שנה</label>
               <input
                 type="number"
                 value={form.year}
                 onChange={(e) => setForm({ ...form, year: Number(e.target.value) })}
-                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-sm"
+                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-base"
               />
             </div>
             <div>
-              <label className="block font-body font-bold text-sm mb-1">כותרת (אופציונלי)</label>
+              <label className="block font-bold text-base mb-1">כותרת (אופציונלי)</label>
               <input
                 value={form.title}
                 onChange={(e) => setForm({ ...form, title: e.target.value })}
-                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-sm"
+                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-base"
               />
             </div>
             <div className="md:col-span-3">
-              <label className="block font-body font-bold text-sm mb-1">תיאור הגיליון</label>
+              <label className="block font-bold text-base mb-1">תיאור הגיליון</label>
               <textarea
                 value={form.description}
                 onChange={(e) => setForm({ ...form, description: e.target.value })}
                 rows={3}
-                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-sm"
+                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-base"
                 placeholder="תיאור קצר של הגיליון — מופיע מתחת לכותרת בעמוד הראשי"
               />
             </div>
@@ -154,7 +154,7 @@ export function IssuesPage() {
       )}
 
       <div className="bg-shefel-white rounded-lg border-2 border-gray-200 overflow-hidden">
-        <table className="w-full text-sm">
+        <table className="w-full text-lg">
           <thead className="bg-shefel-black text-shefel-white">
             <tr>
               <th className="px-4 py-3 text-right font-bold">תאריך</th>
@@ -176,13 +176,13 @@ export function IssuesPage() {
                 <td className="px-4 py-3">{issue.postCount}</td>
                 <td className="px-4 py-3">
                   {issue.isCurrent ? (
-                    <span className="bg-shefel-red text-shefel-white text-xs font-bold px-2 py-1 rounded-full">
+                    <span className="bg-shefel-red text-shefel-white text-base font-bold px-2 py-1 rounded-full">
                       נוכחי
                     </span>
                   ) : (
                     <button
                       onClick={() => handleSetCurrent(issue.id)}
-                      className="text-shefel-red hover:underline text-xs font-bold"
+                      className="text-shefel-red hover:underline text-base font-bold"
                     >
                       הגדר כנוכחי
                     </button>

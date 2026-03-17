@@ -51,7 +51,7 @@ export function TagsPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="font-display font-black text-shefel-black text-3xl">
+        <h1 className="font-black text-shefel-black text-3xl">
           תגיות
         </h1>
         <button
@@ -64,30 +64,30 @@ export function TagsPage() {
 
       {showForm && (
         <div className="bg-shefel-white rounded-lg border-2 border-shefel-red p-6 mb-6">
-          <h2 className="font-display font-bold text-xl mb-4">
+          <h2 className="font-bold text-xl mb-4">
             {editing ? 'עריכת תגית' : 'תגית חדשה'}
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="block font-body font-bold text-sm mb-1">שם (עברית)</label>
+              <label className="block font-bold text-base mb-1">שם (עברית)</label>
               <input
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
-                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-sm"
+                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-base"
               />
             </div>
             <div>
-              <label className="block font-body font-bold text-sm mb-1">Slug (לכתובת URL)</label>
+              <label className="block font-bold text-base mb-1">Slug (לכתובת URL)</label>
               <input
                 value={form.slug}
                 onChange={(e) => setForm({ ...form, slug: e.target.value })}
-                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-sm"
+                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-base"
                 dir="ltr"
               />
             </div>
             <div>
-              <label className="block font-body font-bold text-sm mb-1">צבע (אופציונלי)</label>
+              <label className="block font-bold text-base mb-1">צבע (אופציונלי)</label>
               <input
                 type="color"
                 value={form.color || '#CC0000'}
@@ -116,7 +116,7 @@ export function TagsPage() {
       )}
 
       <div className="bg-shefel-white rounded-lg border-2 border-gray-200 overflow-hidden">
-        <table className="w-full text-sm">
+        <table className="w-full text-lg">
           <thead className="bg-shefel-black text-shefel-white">
             <tr>
               <th className="px-4 py-3 text-right font-bold">שם</th>

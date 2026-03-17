@@ -18,7 +18,7 @@ export function DashboardPage() {
 
   return (
     <div>
-      <h1 className="font-display font-black text-shefel-black text-3xl mb-6">
+      <h1 className="font-black text-shefel-black text-3xl mb-6">
         דשבורד
       </h1>
 
@@ -28,10 +28,10 @@ export function DashboardPage() {
             key={stat.label}
             className="bg-shefel-white rounded-lg border-2 border-shefel-red p-6 text-center"
           >
-            <p className="font-display font-black text-shefel-red text-4xl">
+            <p className="font-black text-shefel-red text-4xl">
               {stat.value}
             </p>
-            <p className="font-body text-shefel-black text-sm mt-1">
+            <p className="text-shefel-black text-base mt-1">
               {stat.label}
             </p>
           </div>

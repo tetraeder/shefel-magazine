@@ -202,8 +202,8 @@ export function SeedPage() {
 
   return (
     <div>
-      <h1 className="font-display font-black text-shefel-black text-3xl mb-6">Seed Data</h1>
-      <p className="font-body text-shefel-black mb-4">
+      <h1 className="font-black text-shefel-black text-3xl mb-6">Seed Data</h1>
+      <p className="text-shefel-black mb-4">
         This will <strong>clear all existing data</strong> and seed the database with mock data (tags, issues, posts, media).
       </p>
       <button
@@ -214,7 +214,7 @@ export function SeedPage() {
         {running ? 'Seeding...' : 'Seed Database'}
       </button>
       {log.length > 0 && (
-        <pre className="mt-6 bg-shefel-black text-shefel-white p-4 rounded text-sm font-mono overflow-auto max-h-96 whitespace-pre-wrap" dir="ltr">
+        <pre className="mt-6 bg-shefel-black text-shefel-white p-4 rounded text-base font-mono overflow-auto max-h-96 whitespace-pre-wrap" dir="ltr">
           {log.join('\n')}
         </pre>
       )}

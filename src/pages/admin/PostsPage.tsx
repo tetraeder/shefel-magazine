@@ -91,7 +91,7 @@ export function PostsPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="font-display font-black text-shefel-black text-3xl">
+        <h1 className="font-black text-shefel-black text-3xl">
           פוסטים
         </h1>
         <button
@@ -104,62 +104,62 @@ export function PostsPage() {
 
       {showForm && (
         <div className="bg-shefel-white rounded-lg border-2 border-shefel-red p-6 mb-6">
-          <h2 className="font-display font-bold text-xl mb-4">
+          <h2 className="font-bold text-xl mb-4">
             {editing ? 'עריכת פוסט' : 'פוסט חדש'}
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block font-body font-bold text-sm mb-1">קישור תמונה</label>
+              <label className="block font-bold text-base mb-1">קישור תמונה</label>
               <input
                 type="url"
                 value={form.imageUrl}
                 onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
-                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-sm"
+                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-base"
                 dir="ltr"
               />
             </div>
             <div>
-              <label className="block font-body font-bold text-sm mb-1">מחבר</label>
+              <label className="block font-bold text-base mb-1">מחבר</label>
               <input
                 value={form.author}
                 onChange={(e) => setForm({ ...form, author: e.target.value })}
-                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-sm"
+                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-base"
               />
             </div>
             <div className="md:col-span-2">
-              <label className="block font-body font-bold text-sm mb-1">כיתוב</label>
+              <label className="block font-bold text-base mb-1">כיתוב</label>
               <textarea
                 value={form.caption}
                 onChange={(e) => setForm({ ...form, caption: e.target.value })}
                 rows={3}
-                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-sm"
+                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-base"
               />
             </div>
             <div>
-              <label className="block font-body font-bold text-sm mb-1">כיתוב מקוצר</label>
+              <label className="block font-bold text-base mb-1">כיתוב מקוצר</label>
               <input
                 value={form.captionSnippet}
                 onChange={(e) => setForm({ ...form, captionSnippet: e.target.value })}
-                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-sm"
+                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-base"
               />
             </div>
             <div>
-              <label className="block font-body font-bold text-sm mb-1">קישור אינסטגרם</label>
+              <label className="block font-bold text-base mb-1">קישור אינסטגרם</label>
               <input
                 type="url"
                 value={form.instagramUrl || ''}
                 onChange={(e) => setForm({ ...form, instagramUrl: e.target.value || null })}
-                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-sm"
+                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-base"
                 dir="ltr"
               />
             </div>
             <div>
-              <label className="block font-body font-bold text-sm mb-1">גיליון</label>
+              <label className="block font-bold text-base mb-1">גיליון</label>
               <select
                 value={form.issueId}
                 onChange={(e) => setForm({ ...form, issueId: e.target.value })}
-                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-sm"
+                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-base"
               >
                 <option value="">בחר גיליון</option>
                 {issues.map((issue) => (
@@ -171,33 +171,33 @@ export function PostsPage() {
               </select>
             </div>
             <div>
-              <label className="block font-body font-bold text-sm mb-1">סדר</label>
+              <label className="block font-bold text-base mb-1">סדר</label>
               <input
                 type="number"
                 value={form.order}
                 onChange={(e) => setForm({ ...form, order: Number(e.target.value) })}
-                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-sm"
+                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-base"
               />
             </div>
             <div>
-              <label className="block font-body font-bold text-sm mb-1">תאריך פרסום</label>
+              <label className="block font-bold text-base mb-1">תאריך פרסום</label>
               <input
                 type="date"
                 value={form.publishedAt}
                 onChange={(e) => setForm({ ...form, publishedAt: e.target.value })}
-                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-sm"
+                className="w-full border-2 border-gray-300 rounded px-3 py-2 text-base"
                 dir="ltr"
               />
             </div>
             <div className="md:col-span-2">
-              <label className="block font-body font-bold text-sm mb-1">תגיות</label>
+              <label className="block font-bold text-base mb-1">תגיות</label>
               <div className="flex flex-wrap gap-2">
                 {tags.map((tag) => (
                   <button
                     key={tag.id}
                     type="button"
                     onClick={() => toggleTag(tag.id)}
-                    className={`px-3 py-1 text-sm font-bold rounded-full border-2 transition-colors ${
+                    className={`px-3 py-1 text-base font-bold rounded-full border-2 transition-colors ${
                       form.tags.includes(tag.id)
                         ? 'bg-shefel-red text-shefel-white border-shefel-red'
                         : 'bg-shefel-white text-shefel-black border-gray-300 hover:border-shefel-red'
@@ -212,7 +212,7 @@ export function PostsPage() {
 
           {form.imageUrl && (
             <div className="mt-4">
-              <p className="font-body font-bold text-sm mb-1">תצוגה מקדימה</p>
+              <p className="font-bold text-base mb-1">תצוגה מקדימה</p>
               <img src={form.imageUrl} alt="preview" className="w-32 h-32 object-cover rounded border-2 border-gray-300" />
             </div>
           )}
@@ -236,7 +236,7 @@ export function PostsPage() {
       )}
 
       <div className="bg-shefel-white rounded-lg border-2 border-gray-200 overflow-hidden">
-        <table className="w-full text-sm">
+        <table className="w-full text-lg">
           <thead className="bg-shefel-black text-shefel-white">
             <tr>
               <th className="px-4 py-3 text-right font-bold">תמונה</th>
@@ -257,7 +257,7 @@ export function PostsPage() {
                 </td>
                 <td className="px-4 py-3">{post.author}</td>
                 <td className="px-4 py-3 max-w-xs truncate">{post.captionSnippet || post.caption}</td>
-                <td className="px-4 py-3 text-xs" dir="ltr">{tsToDateStr(post.publishedAt)|| '—'}</td>
+                <td className="px-4 py-3 text-base" dir="ltr">{tsToDateStr(post.publishedAt)|| '—'}</td>
                 <td className="px-4 py-3">{post.tags.length} תגיות</td>
                 <td className="px-4 py-3">
                   <button
