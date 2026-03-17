@@ -256,7 +256,7 @@ export function NameGeneratorPage() {
       </div>
 
       {/* Star rating — always takes space to prevent layout jump */}
-      <div className="relative flex items-center justify-center h-20 mb-4 transition-all duration-500">
+      <div key={displayName} className="relative flex items-center justify-center h-20 mb-4 transition-all duration-500">
         {isSpinning ? (
           <div className="flex gap-2" dir="ltr">
             {[0, 1, 2, 3, 4].map((i) => (
