@@ -297,11 +297,11 @@ export function TagPage() {
             </div>
           </div>
 
-          {/* Mobile view: player + playlist */}
+          {/* Mobile view: sticky player + playlist */}
           <div className="lg:hidden mb-8">
             {activeVideo && (
-              <div id="mobile-player" className="pb-4 px-3">
-                <div className="relative aspect-[9/16] max-h-[70vh] mx-auto bg-shefel-black rounded-lg overflow-hidden shadow-[4px_4px_0px_theme(--color-shefel-red)]">
+              <div className="sticky top-0 z-20 bg-shefel-yellow pb-2 pt-1 px-3">
+                <div className="relative aspect-[9/16] max-h-[50vh] mx-auto bg-shefel-black rounded-lg overflow-hidden">
                   {activeVideo.mediaOriginUrl?.includes('mediadelivery.net') ? (
                     <iframe
                       key={activeVideo.id}
@@ -321,12 +321,9 @@ export function TagPage() {
                     />
                   )}
                 </div>
-                <p className="font-display font-bold text-shefel-black text-lg text-center mt-2">
+                <p className="font-display font-bold text-shefel-black text-base text-center mt-1 truncate">
                   {activeVideo.title}
                 </p>
-                {activeVideo.credits && (
-                  <p className="text-center text-shefel-red text-base mt-1">קרדיט: {activeVideo.credits}</p>
-                )}
               </div>
             )}
             {/* Scrollable playlist */}
