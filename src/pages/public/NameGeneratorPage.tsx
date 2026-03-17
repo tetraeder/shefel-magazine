@@ -48,6 +48,8 @@ export function NameGeneratorPage() {
   const [isSpinning, setIsSpinning] = useState(false);
   const [isRevealed, setIsRevealed] = useState(true);
   const [showSuggest, setShowSuggest] = useState(false);
+  const [suggestSubmitted, setSuggestSubmitted] = useState(false);
+  const [suggestFading, setSuggestFading] = useState(false);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [copied, setCopied] = useState(false);
@@ -334,53 +336,69 @@ export function NameGeneratorPage() {
             if (e.target === e.currentTarget) setShowSuggest(false);
           }}
         >
-          <div className="bg-shefel-yellow rounded-2xl border-4 border-shefel-red p-8 mx-4 w-full max-w-md space-y-6">
-            <h2 className="font-display font-black text-shefel-red text-2xl text-center">
-              הציעו שם מפעם
-            </h2>
+          <div
+            className={`bg-shefel-yellow rounded-2xl border-4 border-shefel-red p-8 mx-4 w-full max-w-md space-y-6 transition-opacity duration-700 ${suggestFading ? 'opacity-0' : 'opacity-100'}`}
+          >
+            {suggestSubmitted ? (
+              <h2 className="font-display font-black text-shefel-red text-3xl text-center py-8">
+                !תודה רבה
+              </h2>
+            ) : (
+              <>
+                <h2 className="font-display font-black text-shefel-red text-2xl text-center">
+                  הציעו שם מפעם
+                </h2>
 
-            <div className="space-y-4">
-              <div>
-                <label className="font-body text-shefel-red font-bold block mb-1">שם פרטי מפעם</label>
-                <input
-                  type="text"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  className="w-full border-2 border-shefel-red rounded-lg px-4 py-2 font-body text-lg bg-white focus:outline-none focus:border-shefel-black"
-                />
-              </div>
-              <div>
-                <label className="font-body text-shefel-red font-bold block mb-1">שם משפחה מפעם</label>
-                <input
-                  type="text"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  className="w-full border-2 border-shefel-red rounded-lg px-4 py-2 font-body text-lg bg-white focus:outline-none focus:border-shefel-black"
-                />
-              </div>
-            </div>
+                <div className="space-y-4">
+                  <div>
+                    <label className="font-body text-shefel-red font-bold block mb-1">שם פרטי מפעם</label>
+                    <input
+                      type="text"
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                      className="w-full border-2 border-shefel-red rounded-lg px-4 py-2 font-body text-lg bg-white focus:outline-none focus:border-shefel-black"
+                    />
+                  </div>
+                  <div>
+                    <label className="font-body text-shefel-red font-bold block mb-1">שם משפחה מפעם</label>
+                    <input
+                      type="text"
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                      className="w-full border-2 border-shefel-red rounded-lg px-4 py-2 font-body text-lg bg-white focus:outline-none focus:border-shefel-black"
+                    />
+                  </div>
+                </div>
 
-            <div className="flex gap-3 justify-center">
-              <button
-                onClick={() => {
-                  trackNameSuggest(firstName, lastName);
-                  createSuggestion(firstName.trim(), lastName.trim()).catch(() => {});
-                  setShowSuggest(false);
-                  setFirstName('');
-                  setLastName('');
-                }}
-                disabled={!firstName.trim() && !lastName.trim()}
-                className="font-display font-bold text-lg bg-shefel-red text-shefel-yellow px-6 py-2 rounded-lg hover:bg-shefel-black transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
-              >
-                שליחה
-              </button>
-              <button
-                onClick={() => setShowSuggest(false)}
-                className="font-display font-bold text-lg border-2 border-shefel-red text-shefel-red px-6 py-2 rounded-lg hover:bg-shefel-red/10 transition-colors cursor-pointer"
-              >
-                ביטול
-              </button>
-            </div>
+                <div className="flex gap-3 justify-center">
+                  <button
+                    onClick={() => {
+                      trackNameSuggest(firstName, lastName);
+                      createSuggestion(firstName.trim(), lastName.trim()).catch(() => {});
+                      setSuggestSubmitted(true);
+                      setTimeout(() => setSuggestFading(true), 800);
+                      setTimeout(() => {
+                        setShowSuggest(false);
+                        setSuggestSubmitted(false);
+                        setSuggestFading(false);
+                        setFirstName('');
+                        setLastName('');
+                      }, 1500);
+                    }}
+                    disabled={!firstName.trim() && !lastName.trim()}
+                    className="font-display font-bold text-lg bg-shefel-red text-shefel-yellow px-6 py-2 rounded-lg hover:bg-shefel-black transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+                  >
+                    שליחה
+                  </button>
+                  <button
+                    onClick={() => setShowSuggest(false)}
+                    className="font-display font-bold text-lg border-2 border-shefel-red text-shefel-red px-6 py-2 rounded-lg hover:bg-shefel-red/10 transition-colors cursor-pointer"
+                  >
+                    ביטול
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}
