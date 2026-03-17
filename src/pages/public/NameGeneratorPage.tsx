@@ -46,6 +46,7 @@ export function NameGeneratorPage() {
     return params.get('n') || getRandomFromList(NAMES);
   });
   const [isSpinning, setIsSpinning] = useState(false);
+  const isSpinningRef = useRef(false);
   const [isRevealed, setIsRevealed] = useState(true);
   const [showSuggest, setShowSuggest] = useState(false);
   const [suggestSubmitted, setSuggestSubmitted] = useState(false);
@@ -131,8 +132,9 @@ export function NameGeneratorPage() {
     }, 2000);
   }
 
-  const spin = useCallback(() => {
-    if (isSpinning) return;
+  function spin() {
+    if (isSpinningRef.current) return;
+    isSpinningRef.current = true;
     setIsSpinning(true);
     setIsRevealed(false);
     setRating(0);
@@ -153,19 +155,19 @@ export function NameGeneratorPage() {
         if (intervalRef.current) clearTimeout(intervalRef.current);
         const finalName = getRandomName();
         setDisplayName(finalName);
+        isSpinningRef.current = false;
         setIsSpinning(false);
         setIsRevealed(true);
         trackNameSpin(finalName);
         return;
       }
 
-      // Slow down gradually
       speed = 50 + (elapsed / totalDuration) * 250;
       intervalRef.current = setTimeout(tick, speed);
     };
 
     intervalRef.current = setTimeout(tick, speed);
-  }, [isSpinning, getRandomName]);
+  }
 
   spinRef.current = spin;
 
