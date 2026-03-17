@@ -297,12 +297,11 @@ export function TagPage() {
             </div>
           </div>
 
-          {/* Mobile view: sticky mini-player + playlist */}
+          {/* Mobile view: player + playlist */}
           <div className="lg:hidden mb-8">
-            {/* Sticky mini-player */}
             {activeVideo && (
-              <div className="sticky top-14 z-20 bg-shefel-yellow/95 backdrop-blur-sm pb-2 pt-2 px-3 shadow-lg rounded-b-xl">
-                <div className="relative aspect-[9/16] max-h-[55vh] mx-auto bg-shefel-black rounded-lg overflow-hidden shadow-[4px_4px_0px_theme(--color-shefel-red)]">
+              <div id="mobile-player" className="pb-4 px-3">
+                <div className="relative aspect-[9/16] max-h-[70vh] mx-auto bg-shefel-black rounded-lg overflow-hidden shadow-[4px_4px_0px_theme(--color-shefel-red)]">
                   {activeVideo.mediaOriginUrl?.includes('mediadelivery.net') ? (
                     <iframe
                       key={activeVideo.id}
@@ -322,9 +321,12 @@ export function TagPage() {
                     />
                   )}
                 </div>
-                <p className="font-display font-bold text-shefel-black text-base text-center mt-1 truncate">
+                <p className="font-display font-bold text-shefel-black text-lg text-center mt-2">
                   {activeVideo.title}
                 </p>
+                {activeVideo.credits && (
+                  <p className="text-center text-shefel-red text-base mt-1">קרדיט: {activeVideo.credits}</p>
+                )}
               </div>
             )}
             {/* Scrollable playlist */}
@@ -334,7 +336,7 @@ export function TagPage() {
                   key={item.id}
                   onClick={() => {
                     setActiveVideoId(item.id);
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    document.getElementById('mobile-player')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                   }}
                   className={`flex gap-3 items-center w-full text-right rounded-lg p-3 transition-colors ${
                     item.id === activeVideo?.id
