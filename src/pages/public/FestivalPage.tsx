@@ -1,4 +1,30 @@
+import { useMemo } from 'react';
+import { useMedia } from '../../hooks/useMedia';
+import { useTags } from '../../hooks/useTags';
+import { MediaCard } from '../../components/magazine/MediaCard';
+import type { Tag } from '../../types/tag';
+
 export function FestivalPage() {
+  const { media } = useMedia();
+  const { tags } = useTags();
+
+  const tagsMap: Record<string, Tag> = {};
+  for (const tag of tags) {
+    tagsMap[tag.id] = tag;
+  }
+
+  const shefelTag = tags.find((t) => t.name === 'שפל בדרכים');
+  const shefelMedia = useMemo(() => {
+    if (!shefelTag) return [];
+    return media
+      .filter((m) => m.tags.includes(shefelTag.id))
+      .sort((a, b) => {
+        const aTime = a.publishedAt?.toMillis() ?? a.createdAt.toMillis();
+        const bTime = b.publishedAt?.toMillis() ?? b.createdAt.toMillis();
+        return bTime - aTime;
+      });
+  }, [media, shefelTag]);
+
   return (
     <div className="max-w-3xl mx-auto">
       <div className="flex justify-center mb-8">
@@ -98,6 +124,19 @@ export function FestivalPage() {
           </p>
         </div>
       </div>
+
+      {shefelMedia.length > 0 && (
+        <div className="mt-12">
+          <h2 className="font-display font-black text-shefel-red text-3xl text-center mb-6">
+            שפל בדרכים
+          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+            {shefelMedia.map((item) => (
+              <MediaCard key={item.id} item={item} tagsMap={tagsMap} />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
