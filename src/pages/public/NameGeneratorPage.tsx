@@ -23,6 +23,60 @@ interface Star {
   delay: number;
 }
 
+function StarRating({ onRate, avgRating }: { onRate: (v: number) => void; avgRating: { avg: number; count: number } | null }) {
+  const [localRating, setLocalRating] = useState(0);
+  const [hover, setHover] = useState(0);
+  const [locked, setLocked] = useState(false);
+
+  function handleClick(value: number) {
+    if (locked) return;
+    setLocalRating(value);
+    setLocked(true);
+    onRate(value);
+  }
+
+  return (
+    <div className="flex flex-col items-center">
+      <div className="flex gap-2" dir="ltr">
+        {[1, 2, 3, 4, 5].map((value) => {
+          const displayValue = avgRating ? avgRating.avg : (hover || localRating);
+          const full = value <= Math.floor(displayValue);
+          const partial = !full && value === Math.ceil(displayValue) && displayValue % 1 >= 0.25;
+          const active = full || partial || value <= (hover || localRating);
+          return (
+            <button
+              key={value}
+              onClick={() => handleClick(value)}
+              onMouseEnter={() => !locked && setHover(value)}
+              onMouseLeave={() => !locked && setHover(0)}
+              className="text-3xl md:text-4xl cursor-pointer select-none relative"
+              style={{
+                transform: active ? 'scale(1.2)' : 'scale(1)',
+                filter: active
+                  ? 'drop-shadow(0 0 6px rgba(255,194,0,0.8)) drop-shadow(0 0 2px rgba(204,0,0,0.5))'
+                  : 'drop-shadow(0 1px 2px rgba(204,0,0,0.3))',
+                transition: 'transform 0.3s, filter 0.3s',
+                WebkitTextStroke: active ? '0' : '2px #CC0000',
+                color: active ? '' : 'transparent',
+              }}
+            >
+              {active ? '⭐' : '☆'}
+            </button>
+          );
+        })}
+      </div>
+      {avgRating && (
+        <span
+          className="absolute top-full mt-1 font-body text-shefel-red/70 text-lg whitespace-nowrap"
+          style={{ animation: 'avgSlideIn 0.5s ease-out 0.3s both' }}
+        >
+          {avgRating.avg.toFixed(1)} ממוצע ({avgRating.count} דירוגים)
+        </span>
+      )}
+    </div>
+  );
+}
+
 export function NameGeneratorPage() {
   const [namesList, setNamesList] = useState<string[]>(NAMES);
 
@@ -55,9 +109,6 @@ export function NameGeneratorPage() {
   const [lastName, setLastName] = useState('');
   const [copied, setCopied] = useState(false);
   const [stars, setStars] = useState<Star[]>([]);
-  const [rating, setRating] = useState(0);
-  const [hoverRating, setHoverRating] = useState(0);
-  const [ratingLocked, setRatingLocked] = useState(false);
   const [avgRating, setAvgRating] = useState<{ avg: number; count: number } | null>(null);
   const [ratingKey, setRatingKey] = useState(0);
   const ratedNameRef = useRef<string | null>(null);
@@ -103,10 +154,7 @@ export function NameGeneratorPage() {
     setTimeout(() => setStars([]), 2500);
   }, [isSpinning, displayName]);
 
-  async function handleRate(value: number) {
-    if (ratingLocked) return;
-    setRating(value);
-    setRatingLocked(true);
+  function handleRate(value: number) {
     trackNameRate(displayName, value);
     if (value === 5) {
       setStars(makeStars(100, 40, 180));
@@ -146,9 +194,6 @@ export function NameGeneratorPage() {
     isSpinningRef.current = true;
     setIsSpinning(true);
     setIsRevealed(false);
-    setRating(0);
-    setRatingLocked(false);
-    setHoverRating(0);
     setAvgRating(null);
     setRatingKey((k) => k + 1);
     ratedNameRef.current = null;
@@ -289,47 +334,11 @@ export function NameGeneratorPage() {
             ))}
           </div>
         ) : isRevealed ? (
-          <div key={ratingKey} className="flex flex-col items-center">
-            <div className="flex gap-2" dir="ltr">
-              {[1, 2, 3, 4, 5].map((value, i) => {
-                const displayValue = avgRating ? avgRating.avg : (hoverRating || rating);
-                const full = value <= Math.floor(displayValue);
-                const partial = !full && value === Math.ceil(displayValue) && displayValue % 1 >= 0.25;
-                const active = full || partial || value <= (hoverRating || rating);
-                return (
-                  <button
-                    key={value}
-                    onClick={() => handleRate(value)}
-                    onMouseEnter={() => !ratingLocked && setHoverRating(value)}
-                    onMouseLeave={() => !ratingLocked && setHoverRating(0)}
-                    className="text-3xl md:text-4xl cursor-pointer select-none relative"
-                    style={{
-                      animation: avgRating
-                        ? `avgStarPulse 0.4s ease-out ${i * 0.08}s both`
-                        : undefined,
-                      transform: active ? 'scale(1.2)' : 'scale(1)',
-                      filter: active
-                        ? 'drop-shadow(0 0 6px rgba(255,194,0,0.8)) drop-shadow(0 0 2px rgba(204,0,0,0.5))'
-                        : 'drop-shadow(0 1px 2px rgba(204,0,0,0.3))',
-                      transition: 'transform 0.3s, filter 0.3s',
-                      WebkitTextStroke: active ? '0' : '2px #CC0000',
-                      color: active ? '' : 'transparent',
-                    }}
-                  >
-                    {active ? '⭐' : '☆'}
-                  </button>
-                );
-              })}
-            </div>
-            {avgRating && (
-              <span
-                className="absolute top-full mt-1 font-body text-shefel-red/70 text-lg whitespace-nowrap"
-                style={{ animation: 'avgSlideIn 0.5s ease-out 0.3s both' }}
-              >
-                {avgRating.avg.toFixed(1)} ממוצע ({avgRating.count} דירוגים)
-              </span>
-            )}
-          </div>
+          <StarRating
+            key={ratingKey}
+            onRate={handleRate}
+            avgRating={avgRating}
+          />
         ) : null}
       </div>
 
