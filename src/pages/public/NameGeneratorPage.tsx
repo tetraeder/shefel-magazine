@@ -334,15 +334,13 @@ export function NameGeneratorPage() {
             {[0, 1, 2, 3, 4].map((i) => (
               <span
                 key={i}
-                className="text-3xl md:text-4xl select-none"
+                className="select-none"
                 style={{
-                  WebkitTextStroke: '2px #CC0000',
-                  color: 'transparent',
                   filter: 'drop-shadow(0 1px 2px rgba(204,0,0,0.3))',
                   animation: `starLoading 1.2s ease-in-out ${i * 0.2}s infinite`,
                 }}
               >
-                ☆
+                <SVGStar filled={false} size={36} />
               </span>
             ))}
           </div>
