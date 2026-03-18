@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { collection, addDoc, getDocs, query, where, serverTimestamp, orderBy } from 'firebase/firestore';
+import { collection, addDoc, getDocs, query, serverTimestamp, orderBy } from 'firebase/firestore';
 import { getAppDb } from '../../firebase';
 import { NAMES } from '../../data/names';
 import { createSuggestion } from '../../services/names';
@@ -111,7 +111,6 @@ export function NameGeneratorPage() {
   const [stars, setStars] = useState<Star[]>([]);
   const [avgRating, setAvgRating] = useState<{ avg: number; count: number } | null>(null);
   const [ratingKey, setRatingKey] = useState(0);
-  const ratedNameRef = useRef<string | null>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const spinRef = useRef<(() => void) | null>(null);
   const starIdRef = useRef(0);
@@ -165,24 +164,13 @@ export function NameGeneratorPage() {
     setTimeout(() => {
       spinRef.current?.();
     }, 2000);
-    // Write to Firestore and update with real average in background
-    const ratedName = displayName;
-    ratedNameRef.current = ratedName;
+    // Write rating to Firestore (fire and forget)
     try {
       const db = getAppDb();
       addDoc(collection(db, 'nameRatings'), {
-        name: ratedName,
+        name: displayName,
         rating: value,
         createdAt: serverTimestamp(),
-      }).then(() =>
-        getDocs(query(collection(db, 'nameRatings'), where('name', '==', ratedName)))
-      ).then((snap) => {
-        // Only update if we're still showing the same name
-        if (!snap.empty && ratedNameRef.current === ratedName) {
-          let total = 0;
-          snap.forEach((d) => { total += d.data().rating; });
-          setAvgRating({ avg: total / snap.size, count: snap.size });
-        }
       });
     } catch {
       // silent fail
@@ -196,8 +184,6 @@ export function NameGeneratorPage() {
     setIsRevealed(false);
     setAvgRating(null);
     setRatingKey((k) => k + 1);
-    ratedNameRef.current = null;
-
     let speed = 50;
     let elapsed = 0;
     const totalDuration = 2000;
@@ -213,6 +199,8 @@ export function NameGeneratorPage() {
         isSpinningRef.current = false;
         setIsSpinning(false);
         setIsRevealed(true);
+        setAvgRating(null);
+        setRatingKey((k) => k + 1);
         trackNameSpin(finalName);
         return;
       }
