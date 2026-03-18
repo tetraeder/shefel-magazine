@@ -257,10 +257,10 @@ export function TagPage() {
       </div>
 
       {(hasMedia || hasPosts) && (tagMedia.length + sortedPosts.length) > 1 && (
-        <div className="flex justify-center gap-3 mb-6">
+        <div className="flex flex-wrap items-center justify-center gap-2 mb-6">
           <button
             onClick={() => setSort('newest')}
-            className={`font-body font-bold text-base px-4 py-2 rounded-full border-2 transition-all duration-200 active:scale-95 ${
+            className={`px-4 py-1.5 text-base font-bold rounded-full border-2 transition-all duration-200 active:scale-95 ${
               sort === 'newest'
                 ? 'bg-shefel-red text-shefel-yellow border-shefel-yellow'
                 : 'bg-shefel-yellow text-shefel-red border-shefel-red/30 hover:border-shefel-red'
@@ -270,7 +270,7 @@ export function TagPage() {
           </button>
           <button
             onClick={() => setSort('oldest')}
-            className={`font-body font-bold text-base px-4 py-2 rounded-full border-2 transition-all duration-200 active:scale-95 ${
+            className={`px-4 py-1.5 text-base font-bold rounded-full border-2 transition-all duration-200 active:scale-95 ${
               sort === 'oldest'
                 ? 'bg-shefel-red text-shefel-yellow border-shefel-yellow'
                 : 'bg-shefel-yellow text-shefel-red border-shefel-red/30 hover:border-shefel-red'
