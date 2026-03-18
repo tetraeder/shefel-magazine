@@ -310,6 +310,9 @@ export function NameGeneratorPage() {
         )}
       </div>
 
+      {/* DEBUG: remove after testing */}
+      <p className="text-xs text-shefel-red/40">r={rating} avg={avgRating?.avg ?? 'null'} lock={String(ratingLocked)} spin={String(isSpinning)}</p>
+
       {/* Star rating — always takes space to prevent layout jump */}
       <div className="relative flex items-center justify-center h-20 mb-4 transition-all duration-500">
         {isSpinning ? (
