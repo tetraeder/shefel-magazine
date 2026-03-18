@@ -23,10 +23,25 @@ interface Star {
   delay: number;
 }
 
+function SVGStar({ filled, size = 32 }: { filled: boolean; size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+        fill={filled ? '#F5C518' : 'transparent'}
+        stroke="#CC0000"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 function StarRating({ onRate, avgRating }: { onRate: (v: number) => void; avgRating: { avg: number; count: number } | null }) {
   const [localRating, setLocalRating] = useState(0);
   const [hover, setHover] = useState(0);
   const [locked, setLocked] = useState(false);
+  const isMobile = typeof window !== 'undefined' && 'ontouchstart' in window;
 
   function handleClick(value: number) {
     if (locked) return;
@@ -49,18 +64,28 @@ function StarRating({ onRate, avgRating }: { onRate: (v: number) => void; avgRat
               onClick={() => handleClick(value)}
               onMouseEnter={() => !locked && setHover(value)}
               onMouseLeave={() => !locked && setHover(0)}
-              className="text-3xl md:text-4xl cursor-pointer select-none relative"
+              className="cursor-pointer select-none relative p-0 bg-transparent border-none"
               style={{
                 transform: active ? 'scale(1.2)' : 'scale(1)',
                 filter: active
                   ? 'drop-shadow(0 0 6px rgba(255,194,0,0.8)) drop-shadow(0 0 2px rgba(204,0,0,0.5))'
                   : 'drop-shadow(0 1px 2px rgba(204,0,0,0.3))',
                 transition: 'transform 0.3s, filter 0.3s',
-                WebkitTextStroke: active ? '0' : '2px #CC0000',
-                color: active ? '' : 'transparent',
               }}
             >
-              {active ? '⭐' : '☆'}
+              {isMobile ? (
+                <SVGStar filled={active} size={36} />
+              ) : (
+                <span
+                  className="text-3xl md:text-4xl"
+                  style={{
+                    WebkitTextStroke: active ? '0' : '2px #CC0000',
+                    color: active ? '' : 'transparent',
+                  }}
+                >
+                  {active ? '⭐' : '☆'}
+                </span>
+              )}
             </button>
           );
         })}
