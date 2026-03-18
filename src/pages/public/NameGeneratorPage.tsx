@@ -24,11 +24,22 @@ interface Star {
 }
 
 function SVGStar({ filled, size = 32 }: { filled: boolean; size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  return filled ? (
+    <svg key="filled" width={size} height={size} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
-        fill={filled ? '#F5C518' : 'transparent'}
+        fill="#F5C518"
+        stroke="#CC0000"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+    </svg>
+  ) : (
+    <svg key="empty" width={size} height={size} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+        fill="#D4A017"
+        opacity="0.25"
         stroke="#CC0000"
         strokeWidth="1.5"
         strokeLinejoin="round"
@@ -309,9 +320,6 @@ export function NameGeneratorPage() {
           />
         )}
       </div>
-
-      {/* DEBUG: remove after testing */}
-      <p className="text-xs text-shefel-red/40">r={rating} avg={avgRating?.avg ?? 'null'} lock={String(ratingLocked)} spin={String(isSpinning)}</p>
 
       {/* Star rating — always takes space to prevent layout jump */}
       <div className="relative flex items-center justify-center h-20 mb-4 transition-all duration-500">
