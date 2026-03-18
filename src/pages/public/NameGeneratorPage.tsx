@@ -37,33 +37,22 @@ function SVGStar({ filled, size = 32 }: { filled: boolean; size?: number }) {
   );
 }
 
-function StarRating({ onRate, avgRating }: { onRate: (v: number) => void; avgRating: { avg: number; count: number } | null }) {
-  const [localRating, setLocalRating] = useState(0);
-  const [hover, setHover] = useState(0);
-  const [locked, setLocked] = useState(false);
-  const isMobile = typeof window !== 'undefined' && 'ontouchstart' in window;
-
-  function handleClick(value: number) {
-    if (locked) return;
-    setLocalRating(value);
-    setLocked(true);
-    onRate(value);
-  }
-
+function StarRating({ onRate, avgRating, rating, locked }: {
+  onRate: (v: number) => void;
+  avgRating: { avg: number; count: number } | null;
+  rating: number;
+  locked: boolean;
+}) {
   return (
     <div className="flex flex-col items-center">
       <div className="flex gap-2" dir="ltr">
         {[1, 2, 3, 4, 5].map((value) => {
-          const displayValue = avgRating ? avgRating.avg : (hover || localRating);
-          const full = value <= Math.floor(displayValue);
-          const partial = !full && value === Math.ceil(displayValue) && displayValue % 1 >= 0.25;
-          const active = full || partial || value <= (hover || localRating);
+          const displayValue = avgRating ? avgRating.avg : rating;
+          const active = value <= Math.floor(displayValue) || value <= rating;
           return (
             <button
               key={value}
-              onClick={() => handleClick(value)}
-              onMouseEnter={() => !locked && setHover(value)}
-              onMouseLeave={() => !locked && setHover(0)}
+              onClick={() => !locked && onRate(value)}
               className="cursor-pointer select-none relative p-0 bg-transparent border-none"
               style={{
                 transform: active ? 'scale(1.2)' : 'scale(1)',
@@ -73,19 +62,7 @@ function StarRating({ onRate, avgRating }: { onRate: (v: number) => void; avgRat
                 transition: 'transform 0.3s, filter 0.3s',
               }}
             >
-              {isMobile ? (
-                <SVGStar filled={active} size={36} />
-              ) : (
-                <span
-                  className="text-3xl md:text-4xl"
-                  style={{
-                    WebkitTextStroke: active ? '0' : '2px #CC0000',
-                    color: active ? '' : 'transparent',
-                  }}
-                >
-                  {active ? '⭐' : '☆'}
-                </span>
-              )}
+              <SVGStar filled={active} size={36} />
             </button>
           );
         })}
@@ -134,8 +111,9 @@ export function NameGeneratorPage() {
   const [lastName, setLastName] = useState('');
   const [copied, setCopied] = useState(false);
   const [stars, setStars] = useState<Star[]>([]);
+  const [rating, setRating] = useState(0);
+  const [ratingLocked, setRatingLocked] = useState(false);
   const [avgRating, setAvgRating] = useState<{ avg: number; count: number } | null>(null);
-  const [ratingKey, setRatingKey] = useState(0);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const spinRef = useRef<(() => void) | null>(null);
   const starIdRef = useRef(0);
@@ -179,6 +157,9 @@ export function NameGeneratorPage() {
   }, [isSpinning, displayName]);
 
   function handleRate(value: number) {
+    if (ratingLocked) return;
+    setRating(value);
+    setRatingLocked(true);
     trackNameRate(displayName, value);
     if (value === 5) {
       setStars(makeStars(100, 40, 180));
@@ -207,8 +188,9 @@ export function NameGeneratorPage() {
     isSpinningRef.current = true;
     setIsSpinning(true);
     setIsRevealed(false);
+    setRating(0);
+    setRatingLocked(false);
     setAvgRating(null);
-    setRatingKey((k) => k + 1);
     let speed = 50;
     let elapsed = 0;
     const totalDuration = 2000;
@@ -224,8 +206,9 @@ export function NameGeneratorPage() {
         isSpinningRef.current = false;
         setIsSpinning(false);
         setIsRevealed(true);
+        setRating(0);
+        setRatingLocked(false);
         setAvgRating(null);
-        setRatingKey((k) => k + 1);
         trackNameSpin(finalName);
         return;
       }
@@ -346,9 +329,10 @@ export function NameGeneratorPage() {
           </div>
         ) : isRevealed ? (
           <StarRating
-            key={ratingKey}
             onRate={handleRate}
             avgRating={avgRating}
+            rating={rating}
+            locked={ratingLocked}
           />
         ) : null}
       </div>
